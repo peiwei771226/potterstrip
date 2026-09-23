@@ -59,7 +59,9 @@
     statsEl.innerHTML = "";
     (day.stats || []).forEach((s) => {
       const li = el("li", "stat");
-      li.append(el("span", "stat-num", s.num), el("span", "stat-label", s.label));
+      const icon = el("span", "stat-icon", s.icon || "");
+      icon.setAttribute("aria-hidden", "true");
+      li.append(icon, el("span", "stat-num", s.num), el("span", "stat-label", s.label));
       statsEl.appendChild(li);
     });
 
@@ -70,7 +72,8 @@
       const btn = el("button", stop.final ? "stop final" : "stop");
       btn.type = "button";
       btn.dataset.num = String(i + 1);
-      btn.append(
+      const body = el("span", "stop-body");
+      body.append(
         el("span", "stop-time", `${stop.time}　·　${stop.kind}`),
         el("span", "stop-name", stop.name),
         el("span", "stop-desc", stop.desc || "")
@@ -80,7 +83,20 @@
         stop.pills.forEach((p) => {
           meta.appendChild(el("span", p.warn ? "pill pill--warn" : "pill", p.warn ? `⚠︎ ${p.text}` : p.text));
         });
-        btn.appendChild(meta);
+        body.appendChild(meta);
+      }
+      btn.appendChild(body);
+      // 插畫純裝飾，alt 留空
+      if (stop.img) {
+        const art = el("img", "stop-art");
+        art.src = `img/${stop.img}.png`;
+        art.alt = "";
+        art.loading = "lazy";
+        btn.appendChild(art);
+      } else if (stop.emoji) {
+        const art = el("span", "stop-emoji stop-art", stop.emoji);
+        art.setAttribute("aria-hidden", "true");
+        btn.appendChild(art);
       }
       btn.addEventListener("click", () => selectStop(stop, btn));
       li.appendChild(btn);
@@ -332,6 +348,76 @@
     if (watchId === null) startTracking();
     else stopTracking();
   });
+
+  // ---------- 拖曳調整寬度 ----------
+  const layoutEl = $("layout");
+  const resizer = $("resizer");
+  const PANEL_MIN = 300;
+  const MAP_MIN = 320;
+  const PANEL_DEFAULT = 460;
+  const WIDTH_KEY = "potterstrip.panelWidth";
+
+  function clampWidth(w) {
+    const max = Math.max(PANEL_MIN, window.innerWidth - MAP_MIN);
+    return Math.round(Math.min(Math.max(w, PANEL_MIN), max));
+  }
+
+  let panelWidth = PANEL_DEFAULT;
+
+  function setPanelWidth(w, save) {
+    const width = clampWidth(w);
+    panelWidth = width;
+    layoutEl.style.setProperty("--panel-w", `${width}px`);
+    resizer.setAttribute("aria-valuenow", String(width));
+    resizer.setAttribute("aria-valuemin", String(PANEL_MIN));
+    resizer.setAttribute("aria-valuemax", String(clampWidth(Infinity)));
+    if (save) {
+      try { localStorage.setItem(WIDTH_KEY, String(width)); } catch (e) { /* 無痕模式等情況存不了，忽略 */ }
+    }
+  }
+
+  function currentPanelWidth() {
+    return $("panel").getBoundingClientRect().width;
+  }
+
+  resizer.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    resizer.setPointerCapture(e.pointerId);
+    layoutEl.classList.add("is-resizing");
+    const startX = e.clientX;
+    const startW = currentPanelWidth();
+    const onMove = (ev) => setPanelWidth(startW + ev.clientX - startX, false);
+    const onUp = () => {
+      layoutEl.classList.remove("is-resizing");
+      resizer.removeEventListener("pointermove", onMove);
+      resizer.removeEventListener("pointerup", onUp);
+      resizer.removeEventListener("pointercancel", onUp);
+      setPanelWidth(panelWidth, true);
+    };
+    resizer.addEventListener("pointermove", onMove);
+    resizer.addEventListener("pointerup", onUp);
+    resizer.addEventListener("pointercancel", onUp);
+  });
+
+  // 雙擊還原預設寬度
+  resizer.addEventListener("dblclick", () => setPanelWidth(PANEL_DEFAULT, true));
+
+  // 鍵盤：左右鍵微調，Shift 加大步距
+  resizer.addEventListener("keydown", (e) => {
+    const step = e.shiftKey ? 60 : 20;
+    if (e.key === "ArrowLeft") setPanelWidth(panelWidth - step, true);
+    else if (e.key === "ArrowRight") setPanelWidth(panelWidth + step, true);
+    else if (e.key === "Home") setPanelWidth(PANEL_MIN, true);
+    else if (e.key === "End") setPanelWidth(Infinity, true);
+    else return;
+    e.preventDefault();
+  });
+
+  window.addEventListener("resize", () => setPanelWidth(panelWidth, false));
+
+  let savedWidth = PANEL_DEFAULT;
+  try { savedWidth = Number(localStorage.getItem(WIDTH_KEY)) || PANEL_DEFAULT; } catch (e) { /* 同上 */ }
+  setPanelWidth(savedWidth, false);
 
   // ---------- 啟動 ----------
   locateBtn.setAttribute("aria-pressed", "false");

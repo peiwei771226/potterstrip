@@ -6,39 +6,59 @@
   <title>Potter's Taiwan Trip</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="layout">
-    <aside class="panel">
+  <div class="layout" id="layout">
+    <aside class="panel" id="panel">
       <header class="masthead">
         <p class="eyebrow" id="trip-eyebrow"></p>
-        <p class="trip-name" id="trip-title"></p>
+        <p class="trip-name"><span id="trip-title"></span> <span class="sparkle" aria-hidden="true">✦</span></p>
         <p class="trip-sub" id="trip-subtitle"></p>
       </header>
 
       <nav class="days" id="days" aria-label="選擇日期"></nav>
 
       <section class="day" aria-live="polite">
-        <div class="masthead-rule"><span></span><strong id="day-label"></strong><span></span></div>
-        <h1 class="title" id="day-title"></h1>
-        <p class="subtitle" id="day-subtitle"></p>
-        <ul class="stats" id="stats"></ul>
+        <div class="day-head">
+          <p class="day-label" id="day-label"></p>
+          <h1 class="title" id="day-title"></h1>
+          <p class="bubble" id="day-subtitle"></p>
+          <span class="sparkle sparkle--a" aria-hidden="true">✦</span>
+          <span class="sparkle sparkle--b" aria-hidden="true">✧</span>
+        </div>
+
+        <div class="stats-wrap">
+          <img class="peek peek--left" src="img/kids.png" alt="">
+          <img class="peek peek--right" src="img/friends.png" alt="">
+          <ul class="stats" id="stats"></ul>
+        </div>
+
         <ol class="timeline" id="stops"></ol>
+
         <div class="warnings" id="warnings-box">
+          <img class="warnings__bunny" src="img/bunny.png" alt="">
           <h2 class="warnings-title">⚠︎ 出發前必看</h2>
           <ul id="warnings"></ul>
+          <img class="warnings__girl" src="img/girl.png" alt="">
         </div>
       </section>
 
-      <footer class="footer" id="trip-footer"></footer>
+      <footer class="footer"><span aria-hidden="true">🌿</span> <span id="trip-footer"></span> <span aria-hidden="true">🌿</span></footer>
     </aside>
 
+    <div class="resizer" id="resizer" role="separator" aria-orientation="vertical"
+         aria-label="拖曳調整行程與地圖寬度" tabindex="0">
+      <span class="resizer__grip" aria-hidden="true"></span>
+    </div>
+
     <main class="map">
-      <div id="map" class="map__canvas"></div>
-      <iframe id="map-frame" class="map__canvas" title="Google 地圖" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+      <div class="map__frame">
+        <div id="map" class="map__canvas"></div>
+        <iframe id="map-frame" class="map__canvas" title="Google 地圖" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+      </div>
       <div class="map__bar">
         <button type="button" id="locate-btn" class="btn">📍 我的即時位置</button>
         <a id="open-link" class="btn btn--ghost" target="_blank" rel="noopener">在 Google 地圖開啟</a>
