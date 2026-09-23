@@ -6,6 +6,7 @@
 // transit：從這一站到下一站的交通說明。
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
 // more：卡片「更多介紹」展開後的說明，每一項一行，可用 <strong> 粗體。
+// photos：展開區的照片，只用 Wikimedia Commons 等開放授權照片，並附上作者、授權、來源頁。
 // highlights：展開區裡的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
 // img：卡片右側插畫（img/ 資料夾內檔名，不含 .png）；沒有插畫可改填 emoji。
 const TRIP = {
@@ -40,6 +41,10 @@ const TRIP = {
             { zh: "車站旁的<strong>紅磚舊車站</strong>是日治時期留下的古蹟建築，出發前可以順便拍張照。", en: "Next to the station is the <strong>red-brick old station</strong>, a Japanese-era heritage building — worth a quick photo before we leave." },
             { zh: "8:30 出發前先在車站附近吃早餐、買飲料，上高速公路後要到嘉義才會再停。", en: "Grab breakfast and drinks near the station before 8:30 — the next stop is Chiayi." },
             { zh: "跨年連假南下車多，導航若顯示國道 1 號塞車，可改走國道 3 號。", en: "Holiday traffic heads south on New Year's Eve; if Freeway 1 is jammed, switch to Freeway 3." }
+          ],
+          photos: [
+            { src: "img/photos/taichung-old-station.jpg", caption: { zh: "台中舊車站（紅磚古蹟）", en: "Old Taichung Station (red-brick heritage)" },
+              author: "姒姓賢寧", license: "CC BY-SA 4.0", page: "https://commons.wikimedia.org/wiki/File:Old_Taichung_Station_in_March_2026.jpg" }
           ],
           img: "train", query: "台中火車站", lat: 24.1372, lng: 120.6869,
           transit: { zh: "國道 1 號　·　約 2 小時　·　110 km", en: "Freeway 1 · ~2 hrs · 110 km" }
@@ -83,6 +88,14 @@ const TRIP = {
             { zh: "想穿和服拍照的話，<strong>先確認和服店當天有營業</strong>（有店家週四公休的紀錄，12/31 剛好是週四）。", en: "For kimono photos, <strong>check the rental shop is open</strong> — at least one has closed on Thursdays, and Dec 31 is a Thursday." },
             { zh: "下午 4 點要去吃林聰明，點心淺嚐就好，別吃太飽。", en: "Dinner is at 4 pm, so keep the snacks light." }
           ],
+          photos: [
+            { src: "img/photos/hinoki-village.jpg", caption: { zh: "檜意森活村園區", en: "Hinoki Village grounds" },
+              author: "Mk2010", license: "CC BY-SA 3.0", page: "https://commons.wikimedia.org/wiki/File:Hinoki_Village,_Chiayi_City_20130505.jpg" },
+            { src: "img/photos/hinoki-kano.jpg", caption: { zh: "村裡的 KANO 故事館（2015 年攝）", en: "KANO Story House in the village (2015)" },
+              author: "Asacyan", license: "CC BY-SA 4.0", page: "https://commons.wikimedia.org/wiki/File:KANO_Story_House,_Hinoki_Village_20151029.jpg" },
+            { src: "img/photos/pineapple-cake.jpg", caption: { zh: "鳳梨酥（示意照）", en: "Pineapple cakes (illustrative)" },
+              author: "Ocdp", license: "CC0", page: "https://commons.wikimedia.org/wiki/File:Taiwanese_Pineapple_Cake_001.jpg" }
+          ],
           img: "fox", query: "檜意森活村 嘉義市",
           transit: { zh: "開車 10 分鐘　·　2 km（返回市區）", en: "10 min drive · 2 km (back downtown)" }
         },
@@ -98,6 +111,12 @@ const TRIP = {
             { zh: "砂鍋魚頭是嘉義代表小吃：炸過的魚頭配白菜、豆腐等料，湯頭帶<strong>沙茶</strong>香。", en: "Fish-head casserole is Chiayi's signature dish: fried fish head with napa cabbage and tofu in a <strong>shacha</strong>-flavoured broth." },
             { zh: "不吃牛：點餐前可以<strong>跟店家確認湯底和配料</strong>，放心再吃。", en: "No beef: <strong>ask the staff about the broth and toppings</strong> before ordering, just to be sure." },
             { zh: "一定要配一碗<strong>火雞肉飯</strong>，這是嘉義最具代表性的在地小吃。", en: "Pair it with <strong>turkey rice</strong> — Chiayi's most famous hometown dish." }
+          ],
+          photos: [
+            { src: "img/photos/fish-head.jpg", caption: { zh: "嘉義砂鍋魚頭（示意照，非林聰明本店）", en: "Chiayi fish-head casserole (illustrative, not this shop)" },
+              author: "bryan... from Taipei, Taiwan", license: "CC BY-SA 2.0", page: "https://commons.wikimedia.org/wiki/File:Food_(40699417355).jpg" },
+            { src: "img/photos/turkey-rice.jpg", caption: { zh: "火雞肉飯（示意照）", en: "Turkey rice (illustrative)" },
+              author: "(WT-shared) Shoestring at wts.wikivoyage", license: "Public domain", page: "https://commons.wikimedia.org/wiki/File:TurkeyRiceChiayiTaiwan.jpg" }
           ],
           img: "chef", query: "林聰明沙鍋魚頭 中正路 嘉義市",
           transit: { zh: "步行 1 分鐘　·　70 m（同一條中正路）", en: "1 min walk · 70 m (same street)" }
@@ -129,6 +148,10 @@ const TRIP = {
             { zh: "山區晚上很冷，<strong>外套、帽子放在隨手拿得到的地方</strong>，下車就穿。", en: "Mountain nights are cold — keep <strong>jackets and hats within reach</strong> for when we arrive." },
             { zh: "跨年夜遠離光害，天氣好的話很適合在民宿外看星星倒數。", en: "Far from city lights — on a clear night it's perfect for stargazing into the New Year." },
             { zh: "最後一段是山區小路，照導航慢慢開，晚到記得先打電話給民宿。", en: "The last stretch is a narrow mountain road — drive slowly and call the B&B if we're running late." }
+          ],
+          photos: [
+            { src: "img/photos/tea-garden.jpg", caption: { zh: "上山路上台 18 線隙頂一帶的茶園", en: "Tea gardens around Xiding on Highway 18, on the way up" },
+              author: "Chi-Hung Lin", license: "CC BY-SA 3.0", page: "https://commons.wikimedia.org/wiki/File:%E5%98%89%E7%BE%A9%E7%B8%A3%E7%95%AA%E8%B7%AF%E9%84%89_%E9%9A%99%E9%A0%82_%E8%8C%B6%E5%9C%92_-_panoramio_(1).jpg" }
           ],
           img: "cabin", query: "宣信民宿 竹崎鄉中和村"
         }

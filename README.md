@@ -27,3 +27,9 @@ Repo → Settings → Pages → Source 選 `Deploy from a branch`，Branch 選 `
 約一分鐘後網址為 `https://peiwei771226.github.io/potterstrip/`。
 
 > 即時定位需要 HTTPS，GitHub Pages 已內建；直接雙擊本機的 `index.html` 開啟時，部分瀏覽器會擋定位。
+
+## 照片來源
+
+`img/photos/` 裡的實拍照片都來自 [Wikimedia Commons](https://commons.wikimedia.org/)，授權為 CC BY-SA / CC0 / 公有領域。每張照片在網站上都標有作者與授權，點擊可到原始頁面。標「示意照」的不是該店家本身的照片。新增照片時請同樣只用開放授權的圖，不要直接抓部落格或店家照片。
+
+`img/` 其他插畫取自使用者提供的 AI 生成圖。

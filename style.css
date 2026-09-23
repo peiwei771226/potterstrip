@@ -323,6 +323,55 @@ body {
 }
 .stop-more__list strong { color: var(--green); }
 
+/* 展開區照片：橫向捲動 */
+.stop-photos {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--card-line) transparent;
+}
+.stop-photo { flex: 0 0 min(240px, 78%); scroll-snap-align: start; }
+.stop-photo:only-child { flex-basis: 100%; }
+.stop-photo figure {
+  border: 2px solid var(--card-line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: 0 2px 0 var(--card-line);
+}
+.stop-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.stop-photo figcaption { padding: 6px 10px 8px; }
+.stop-photo__caption { display: block; font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+.stop-photo__credit {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.stop-photo__credit:hover { color: var(--green); }
+.stop-gmaps {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  text-underline-offset: 3px;
+}
+.stop-gmaps:hover { color: #1f4a33; }
+
 .stop::before {
   content: attr(data-num);
   position: absolute;

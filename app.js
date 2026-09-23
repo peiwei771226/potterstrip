@@ -41,7 +41,7 @@
       geoErr: { 1: "未允許定位，請在瀏覽器設定開啟位置權限", 2: "目前無法取得位置", 3: "定位逾時，請再試一次" },
       notFound: (n) => `找不到「${n}」的位置，請在行程檔補上 lat / lng`,
       mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS",
-      more: "更多介紹 ▾", less: "收起 ▴"
+      more: "更多介紹 ▾", less: "收起 ▴", morePhotos: "📸 到 Google 地圖看更多實拍照片 ↗"
     },
     en: {
       htmlLang: "en", mapHl: "en",
@@ -53,7 +53,7 @@
       geoErr: { 1: "Location permission denied — enable it in browser settings", 2: "Location unavailable right now", 3: "Location timed out, please try again" },
       notFound: (n) => `Couldn't find "${n}" — add lat / lng in the itinerary file`,
       mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS",
-      more: "More details ▾", less: "Show less ▴"
+      more: "More details ▾", less: "Show less ▴", morePhotos: "📸 See more real photos on Google Maps ↗"
     }
   };
   const LANG_KEY = "potterstrip.lang";
@@ -175,7 +175,8 @@
       card.appendChild(main);
 
       // 展開區：更多介紹＋名店清單，不影響地圖
-      const hasMore = (stop.more && stop.more.length) || (stop.highlights && stop.highlights.length);
+      const hasMore = (stop.more && stop.more.length) || (stop.highlights && stop.highlights.length) ||
+        (stop.photos && stop.photos.length) || stop.query;
       if (hasMore) {
         const key = `${currentDay}:${i}`;
         const panelId = `more-${currentDay}-${i}`;
@@ -206,6 +207,34 @@
           });
           box.appendChild(rows);
           inner.appendChild(box);
+        }
+        if (stop.photos && stop.photos.length) {
+          const gallery = el("ul", "stop-photos");
+          stop.photos.forEach((ph) => {
+            const item = el("li", "stop-photo");
+            const fig = el("figure");
+            const img = el("img");
+            img.src = ph.src;
+            img.alt = t(ph.caption);
+            img.loading = "lazy";
+            const cap = el("figcaption");
+            const credit = el("a", "stop-photo__credit", `📷 ${ph.author} · ${ph.license}`);
+            credit.href = ph.page;
+            credit.target = "_blank";
+            credit.rel = "noopener";
+            cap.append(el("span", "stop-photo__caption", t(ph.caption)), credit);
+            fig.append(img, cap);
+            item.appendChild(fig);
+            gallery.appendChild(item);
+          });
+          inner.appendChild(gallery);
+        }
+        if (stop.query) {
+          const gmaps = el("a", "stop-gmaps", ui("morePhotos"));
+          gmaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.query)}`;
+          gmaps.target = "_blank";
+          gmaps.rel = "noopener";
+          inner.appendChild(gmaps);
         }
         panel.appendChild(inner);
 
