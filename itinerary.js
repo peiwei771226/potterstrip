@@ -5,6 +5,7 @@
 // lat / lng：選填。只有填了 API 金鑰的「完整地圖」模式會用到，沒填會自動用 query 查座標。
 // transit：從這一站到下一站的交通說明。
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
+// highlights：卡片內的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
 // img：卡片右側插畫（img/ 資料夾內檔名，不含 .png）；沒有插畫可改填 emoji。
 const TRIP = {
   eyebrow: "ITINERARY · 2026–2027",
@@ -55,6 +56,15 @@ const TRIP = {
             zh: "日治時期林務局木造宿舍群，全台最大檜木日式建築聚落。29 棟老屋文創商店、和服體驗、庭園拍照，慢慢逛 2.5–3 小時。",
             en: "Japanese-era forestry staff quarters — Taiwan's largest cluster of cypress-wood Japanese buildings. 29 old houses with craft shops, kimono rental and gardens. Allow 2.5–3 hours."
           },
+          highlightsTitle: { zh: "村裡名店", en: "Shops to try" },
+          highlights: [
+            { name: { zh: "福義軒", en: "Fu Yi Xuan" }, item: { zh: "蛋捲、福椒蘇打餅（胡椒餅乾）、限定涼蛋捲", en: "Egg rolls, pepper soda crackers, village-only chilled egg rolls" } },
+            { name: { zh: "金澤霜淇淋", en: "Kanazawa soft serve" }, item: { zh: "金箔霜淇淋", en: "Gold-leaf soft serve" } },
+            { name: { zh: "森咖啡", en: "Mori Coffee" }, item: { zh: "鬆餅、宇治金時刨冰", en: "Pancakes, matcha red-bean shaved ice" } },
+            { name: { zh: "彩虹燒", en: "Rainbow cakes" }, item: { zh: "天然食材上色的彩色點心", en: "Colourful treats tinted with natural ingredients" } },
+            { name: { zh: "旺萊山", en: "Wang Lai Shan" }, item: { zh: "土鳳梨酥", en: "Pineapple cakes" } },
+            { name: { zh: "奮起福餅創始店", en: "Fenqi Fu Bing (original)" }, item: { zh: "傳統糕餅", en: "Traditional pastries" } }
+          ],
           pills: [{ text: { zh: "10:00–18:00 全年開放", en: "Open daily 10:00–18:00" } }],
           img: "fox", query: "檜意森活村 嘉義市",
           transit: { zh: "開車 10 分鐘　·　2 km（返回市區）", en: "10 min drive · 2 km (back downtown)" }

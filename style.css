@@ -303,6 +303,25 @@ body {
   color: var(--ink-soft);
   line-height: 1.7;
 }
+.stop-shops {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 2px dashed var(--card-line);
+  border-radius: 12px;
+  background: #fdf3e1;
+}
+.stop-shops__title {
+  display: block;
+  font-family: var(--round);
+  font-size: 14px;
+  color: var(--orange-ink);
+  margin-bottom: 2px;
+}
+.stop-shops__row { display: block; font-size: 13px; line-height: 1.65; color: var(--ink-soft); }
+.stop-shops__name { font-weight: 700; color: var(--ink); }
+.stop-shops__name::after { content: "　"; }
+
 .stop-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 
 .stop-art {

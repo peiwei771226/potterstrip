@@ -145,6 +145,16 @@
         el("span", "stop-name", t(stop.name)),
         el("span", "stop-desc", t(stop.desc))
       );
+      if (stop.highlights && stop.highlights.length) {
+        const box = el("span", "stop-shops");
+        box.appendChild(el("span", "stop-shops__title", `🛍️ ${t(stop.highlightsTitle)}`));
+        stop.highlights.forEach((h) => {
+          const row = el("span", "stop-shops__row");
+          row.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
+          box.appendChild(row);
+        });
+        body.appendChild(box);
+      }
       if (stop.pills && stop.pills.length) {
         const meta = el("span", "stop-meta");
         stop.pills.forEach((p) => {
