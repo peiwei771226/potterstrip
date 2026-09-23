@@ -123,7 +123,7 @@
 
   function renderDay() {
     const day = DAYS[currentDay];
-    $("day-label").textContent = `${t(day.label)} · ${day.stops.length} ${ui("stops")}`;
+    $("day-label").textContent = `${t(day.label)} · ${day.stops.filter((s) => !s.optional).length} ${ui("stops")}`;
     $("day-title").textContent = t(day.title);
     $("day-subtitle").textContent = t(day.subtitle);
 
@@ -139,10 +139,13 @@
 
     stopsEl.innerHTML = "";
     activeStopEl = null;
+    let num = 0;
+    let pendingTransit = null; // 主站的交通說明延後到加碼站之後才顯示，才不會誤導
     day.stops.forEach((stop, i) => {
       const li = el("li");
-      const card = el("div", stop.final ? "stop final" : "stop");
-      card.dataset.num = String(i + 1);
+      const card = el("div", ["stop", stop.final && "final", stop.optional && "optional"].filter(Boolean).join(" "));
+      // 加碼站編號顯示＋，不佔用主行程的站號
+      card.dataset.num = stop.optional ? "＋" : String(++num);
 
       // 卡片主體：點了右側地圖跳到該地點
       const main = el("button", "stop-main");
@@ -156,7 +159,9 @@
       if (stop.pills && stop.pills.length) {
         const meta = el("span", "stop-meta");
         stop.pills.forEach((p) => {
-          meta.appendChild(el("span", p.warn ? "pill pill--warn" : "pill", p.warn ? `⚠︎ ${t(p.text)}` : t(p.text)));
+          const cls = p.extra ? "pill pill--extra" : p.warn ? "pill pill--warn" : "pill";
+          const label = p.extra ? `🍜 ${t(p.text)}` : p.warn ? `⚠︎ ${t(p.text)}` : t(p.text);
+          meta.appendChild(el("span", cls, label));
         });
         body.appendChild(meta);
       }
@@ -228,7 +233,14 @@
       }
 
       li.appendChild(card);
-      if (stop.transit) li.appendChild(el("div", "transit", t(stop.transit)));
+      if (stop.transit) pendingTransit = t(stop.transit);
+      const next = day.stops[i + 1];
+      if (pendingTransit && !(next && next.optional)) {
+        li.appendChild(el("div", "transit", pendingTransit));
+        pendingTransit = null;
+      } else if (stop.optional || (next && next.optional)) {
+        li.classList.add("gap");
+      }
       stopsEl.appendChild(li);
     });
 

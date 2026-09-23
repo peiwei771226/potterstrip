@@ -4,6 +4,7 @@
 // query：Google 地圖搜尋字串（右側地圖用它定位），寫越完整越準，不用翻譯；沒有 query 也沒有 lat/lng 的站不會動地圖。
 // lat / lng：選填。只有填了 API 金鑰的「完整地圖」模式會用到，沒填會自動用 query 查座標。
 // transit：從這一站到下一站的交通說明。
+// optional: true：加碼站（虛線卡片、編號顯示＋、不算站數），pills 可用 extra: true 做「如果還吃得下可以去」標籤。
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
 // more：卡片「更多介紹」展開後的說明，每一項一行，可用 <strong> 粗體。
 // photos：展開區的補充照片，只用 Wikimedia Commons 等開放授權照片，附上作者、授權、來源頁；
@@ -101,6 +102,20 @@ const TRIP = {
           transit: { zh: "開車 10 分鐘　·　2 km（返回市區）", en: "10 min drive · 2 km (back downtown)" }
         },
         {
+          optional: true, time: { zh: "加碼", en: "Optional" }, kind: { zh: "涼麵", en: "Cold noodles" },
+          name: { zh: "公園老店涼麵", en: "Park Old Shop Cold Noodles" },
+          desc: {
+            zh: "在地老字號，推薦選吸附滿滿醬汁的寬麵，搭配香菇肉羹湯最對味。在檜意往市區的路上。",
+            en: "A long-standing local shop — go for the wide noodles that soak up the sauce, with a bowl of mushroom pork thick soup. On the way from Hinoki Village into town."
+          },
+          pills: [{ text: { zh: "如果還吃得下可以去", en: "Only if you still have room" }, extra: true }, { text: { zh: "TUE / WED 公休", en: "Closed TUE / WED" }, warn: true }, { text: { zh: "09:00–17:00", en: "Open 09:00–17:00" } }],
+          more: [
+            { zh: "地址：嘉義市東區維新路 36 號", en: "Address: No. 36, Weixin Rd., East District, Chiayi City" },
+            { zh: "<strong>17:00 就關門</strong>，想吃要在逛完檜意、去林聰明之前。", en: "<strong>Closes at 17:00</strong> — go after Hinoki Village, before Lin Tsung-Ming." }
+          ],
+          query: "公園老店涼麵 嘉義市東區維新路36號"
+        },
+        {
           time: "16:00–17:15", kind: { zh: "早鳥晚餐", en: "Early dinner" },
           name: { zh: "林聰明砂鍋魚頭（中正創始店）", en: "Lin Tsung-Ming Fish Head Casserole (original shop)" },
           desc: {
@@ -117,6 +132,34 @@ const TRIP = {
           transit: { zh: "步行 1 分鐘　·　70 m（同一條中正路）", en: "1 min walk · 70 m (same street)" }
         },
         {
+          optional: true, time: { zh: "加碼", en: "Optional" }, kind: { zh: "涼麵・涼圓", en: "Cold noodles & chilled bawan" },
+          name: { zh: "黃記涼麵涼圓", en: "Huang Ji Cold Noodles & Chilled Bawan" },
+          desc: {
+            zh: "嘉義人氣涼麵。寬扁麵條配濃郁麻醬與蒜香，附免費決明子茶；招牌還有蒸熟後冰鎮的涼肉圓。",
+            en: "A popular Chiayi cold-noodle spot: wide flat noodles with rich sesame sauce and garlic, plus free cassia-seed tea. Also famous for its steamed-then-chilled meatballs (liang rou yuan)."
+          },
+          pills: [{ text: { zh: "如果還吃得下可以去", en: "Only if you still have room" }, extra: true }, { text: { zh: "MON / TUE 公休", en: "Closed MON / TUE" }, warn: true }, { text: { zh: "09:00–18:00", en: "Open 09:00–18:00" } }],
+          more: [
+            { zh: "地址：嘉義市東區興中街 6 號", en: "Address: No. 6, Xingzhong St., East District, Chiayi City" },
+            { zh: "離林聰明很近，吃完魚頭還有胃口可以來一份涼圓。", en: "Very close to Lin Tsung-Ming — if there's still room after the fish head, try the chilled bawan." }
+          ],
+          query: "黃記涼麵涼圓 嘉義市東區興中街6號"
+        },
+        {
+          optional: true, time: { zh: "加碼", en: "Optional" }, kind: { zh: "涼麵", en: "Cold noodles" },
+          name: { zh: "崇文錦魯麵", en: "Chongwen Jin Lu Noodles" },
+          desc: {
+            zh: "營業超過一甲子的老店，涼麵醬汁清爽微酸，份量實在、價格平實。",
+            en: "A shop running for over 60 years. Its cold-noodle sauce is light and slightly tangy; generous portions at fair prices."
+          },
+          pills: [{ text: { zh: "如果還吃得下可以去", en: "Only if you still have room" }, extra: true }, { text: { zh: "MON 常休・依公告", en: "Usually closed MON" }, warn: true }, { text: { zh: "10:30–18:00", en: "Open 10:30–18:00" } }],
+          more: [
+            { zh: "地址：嘉義市東區崇文街 107 號", en: "Address: No. 107, Chongwen St., East District, Chiayi City" },
+            { zh: "18:00 關門，想吃要在去源興之前。", en: "Closes at 18:00 — go before the drink stops." }
+          ],
+          query: "崇文錦魯麵 嘉義市東區崇文街107號"
+        },
+        {
           time: "17:20–17:40", kind: { zh: "外帶飲料", en: "Drinks to go" },
           name: { zh: "源興御香屋（中正路二店）", en: "Yuan Xing Yu Xiang Wu (Zhongzheng Rd. branch)" },
           desc: {
@@ -130,6 +173,20 @@ const TRIP = {
           ],
           query: "源興御香屋 中正 嘉義市",
           transit: { zh: "市區內　·　開車約 5 分鐘", en: "Across downtown · ~5 min drive" }
+        },
+        {
+          optional: true, time: { zh: "加碼", en: "Optional" }, kind: { zh: "涼麵・果汁", en: "Cold noodles & juice" },
+          name: { zh: "涼麵四味果汁", en: "Four-Flavour Juice & Cold Noodles" },
+          desc: {
+            zh: "招牌吃法是一盤淋上白醋美乃滋的涼麵，再配一杯綜合鳳梨、木瓜、芭樂、檸檬的四味果汁。",
+            en: "The classic order: cold noodles topped with white-vinegar mayonnaise, plus a four-flavour juice of pineapple, papaya, guava and lemon."
+          },
+          pills: [{ text: { zh: "如果還吃得下可以去", en: "Only if you still have room" }, extra: true }, { text: { zh: "WED 公休", en: "Closed WED" }, warn: true }, { text: { zh: "09:00–19:00", en: "Open 09:00–19:00" } }],
+          more: [
+            { zh: "地址：嘉義市西區信義路 48 號（另有文化店）", en: "Address: No. 48, Xinyi Rd., West District, Chiayi City (also a Wenhua branch)" },
+            { zh: "在西區，要<strong>稍微繞路</strong>；時間緊的話跳過，別影響 18:00 上山。", en: "It's in the West District, a <strong>small detour</strong> — skip it if we're short on time so we still leave for the mountain by 18:00." }
+          ],
+          query: "涼麵四味果汁 嘉義市西區信義路48號"
         },
         {
           time: "17:45–18:00", kind: { zh: "外帶飲料", en: "Drinks to go" },
