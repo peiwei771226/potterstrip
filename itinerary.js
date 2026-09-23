@@ -7,7 +7,7 @@
 const TRIP = {
   eyebrow: "ITINERARY · 2026–2027",
   title: "Potter's Taiwan Trip",
-  subtitle: "給從馬來西亞來的 Potter　·　不吃牛肉",
+  subtitle: "給從馬來西亞來的 Potter　·小過 飲食禁忌:不吃牛肉",
   footer: "MADE FOR POTTER　·　TAIWAN 2026",
   days: [
     {
