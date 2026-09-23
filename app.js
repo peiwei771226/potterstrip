@@ -27,6 +27,7 @@
 
   // hidden: true 的天數（還沒規劃好）不顯示
   const DAYS = TRIP.days.filter((d) => !d.hidden);
+  const expanded = new Set(); // 已展開的卡片 "天數:站序"，切換語言時保留
 
   // ---------- 雙語 ----------
   const UI = {
@@ -39,7 +40,8 @@
       noGeo: "此瀏覽器不支援定位", geoFail: "定位失敗",
       geoErr: { 1: "未允許定位，請在瀏覽器設定開啟位置權限", 2: "目前無法取得位置", 3: "定位逾時，請再試一次" },
       notFound: (n) => `找不到「${n}」的位置，請在行程檔補上 lat / lng`,
-      mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS"
+      mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS",
+      more: "更多介紹 ▾", less: "收起 ▴"
     },
     en: {
       htmlLang: "en", mapHl: "en",
@@ -50,7 +52,8 @@
       noGeo: "This browser doesn't support location", geoFail: "Couldn't get your location",
       geoErr: { 1: "Location permission denied — enable it in browser settings", 2: "Location unavailable right now", 3: "Location timed out, please try again" },
       notFound: (n) => `Couldn't find "${n}" — add lat / lng in the itinerary file`,
-      mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS"
+      mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS",
+      more: "More details ▾", less: "Show less ▴"
     }
   };
   const LANG_KEY = "potterstrip.lang";
@@ -136,25 +139,18 @@
     activeStopEl = null;
     day.stops.forEach((stop, i) => {
       const li = el("li");
-      const btn = el("button", stop.final ? "stop final" : "stop");
-      btn.type = "button";
-      btn.dataset.num = String(i + 1);
+      const card = el("div", stop.final ? "stop final" : "stop");
+      card.dataset.num = String(i + 1);
+
+      // 卡片主體：點了右側地圖跳到該地點
+      const main = el("button", "stop-main");
+      main.type = "button";
       const body = el("span", "stop-body");
       body.append(
         el("span", "stop-time", `${t(stop.time)}　·　${t(stop.kind)}`),
         el("span", "stop-name", t(stop.name)),
         el("span", "stop-desc", t(stop.desc))
       );
-      if (stop.highlights && stop.highlights.length) {
-        const box = el("span", "stop-shops");
-        box.appendChild(el("span", "stop-shops__title", `🛍️ ${t(stop.highlightsTitle)}`));
-        stop.highlights.forEach((h) => {
-          const row = el("span", "stop-shops__row");
-          row.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
-          box.appendChild(row);
-        });
-        body.appendChild(box);
-      }
       if (stop.pills && stop.pills.length) {
         const meta = el("span", "stop-meta");
         stop.pills.forEach((p) => {
@@ -162,21 +158,71 @@
         });
         body.appendChild(meta);
       }
-      btn.appendChild(body);
+      main.appendChild(body);
       // 插畫純裝飾，alt 留空
       if (stop.img) {
         const art = el("img", "stop-art");
         art.src = `img/${stop.img}.png`;
         art.alt = "";
         art.loading = "lazy";
-        btn.appendChild(art);
+        main.appendChild(art);
       } else if (stop.emoji) {
         const art = el("span", "stop-emoji stop-art", stop.emoji);
         art.setAttribute("aria-hidden", "true");
-        btn.appendChild(art);
+        main.appendChild(art);
       }
-      btn.addEventListener("click", () => selectStop(stop, btn));
-      li.appendChild(btn);
+      main.addEventListener("click", () => selectStop(stop, card));
+      card.appendChild(main);
+
+      // 展開區：更多介紹＋名店清單，不影響地圖
+      const hasMore = (stop.more && stop.more.length) || (stop.highlights && stop.highlights.length);
+      if (hasMore) {
+        const key = `${currentDay}:${i}`;
+        const panelId = `more-${currentDay}-${i}`;
+        const toggle = el("button", "stop-toggle");
+        toggle.type = "button";
+        toggle.setAttribute("aria-controls", panelId);
+
+        const panel = el("div", "stop-more");
+        panel.id = panelId;
+        const inner = el("div", "stop-more__inner");
+        if (stop.more && stop.more.length) {
+          const list = el("ul", "stop-more__list");
+          stop.more.forEach((m) => {
+            const item = el("li");
+            item.innerHTML = t(m); // 行程檔是自己維護的，允許 <strong> 粗體
+            list.appendChild(item);
+          });
+          inner.appendChild(list);
+        }
+        if (stop.highlights && stop.highlights.length) {
+          const box = el("div", "stop-shops");
+          box.appendChild(el("h3", "stop-shops__title", `🛍️ ${t(stop.highlightsTitle)}`));
+          const rows = el("ul", "stop-shops__list");
+          stop.highlights.forEach((h) => {
+            const row = el("li", "stop-shops__row");
+            row.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
+            rows.appendChild(row);
+          });
+          box.appendChild(rows);
+          inner.appendChild(box);
+        }
+        panel.appendChild(inner);
+
+        const setOpen = (open) => {
+          card.classList.toggle("is-open", open);
+          toggle.setAttribute("aria-expanded", String(open));
+          toggle.textContent = open ? ui("less") : ui("more");
+          panel.inert = !open;
+          if (open) expanded.add(key);
+          else expanded.delete(key);
+        };
+        toggle.addEventListener("click", () => setOpen(!card.classList.contains("is-open")));
+        setOpen(expanded.has(key));
+        card.append(toggle, panel);
+      }
+
+      li.appendChild(card);
       if (stop.transit) li.appendChild(el("div", "transit", t(stop.transit)));
       stopsEl.appendChild(li);
     });

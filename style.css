@@ -234,34 +234,87 @@ body {
 
 .stop {
   position: relative;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  width: 100%;
-  padding: 14px 14px 14px 16px;
   border: 2px solid var(--card-line);
   border-radius: 16px;
   background: var(--card);
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   box-shadow: var(--shadow);
   transition: transform .2s, border-color .2s;
 }
 .stop:hover,
-.stop:focus-visible {
+.stop:focus-within {
   border-color: var(--green);
   transform: translateY(-2px) rotate(-.3deg);
-  outline: none;
 }
-.stop:hover .stop-art,
-.stop:focus-visible .stop-art { animation: wiggle .6s ease-in-out; }
+.stop:hover .stop-art { animation: wiggle .6s ease-in-out; }
 .stop.is-active {
   border-color: var(--green);
   background: #f3faf2;
   box-shadow: 0 0 0 4px rgba(46, 107, 74, 0.15), var(--shadow);
 }
+.stop-main {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 14px 12px 16px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.stop-main:focus-visible { outline: 2px solid var(--green); outline-offset: -4px; }
+
+/* 展開更多介紹 */
+.stop-toggle {
+  display: block;
+  margin: 0 14px 12px 16px;
+  padding: 3px 12px;
+  border: 1.5px solid var(--green-line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--green);
+  font-family: var(--round);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.stop-toggle:hover { background: var(--green-soft); }
+.stop-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.stop-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .3s ease;
+}
+.stop.is-open .stop-more { grid-template-rows: 1fr; }
+.stop-more__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.stop.is-open .stop-more__inner { padding: 0 16px 16px; }
+.stop-more__list {
+  list-style: none;
+  padding-top: 10px;
+  border-top: 2px dashed var(--card-line);
+}
+.stop-more__list li {
+  position: relative;
+  padding: 3px 0 3px 20px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.stop-more__list li::before {
+  content: "🌱";
+  position: absolute;
+  left: 0;
+  font-size: 11px;
+  top: 6px;
+}
+.stop-more__list strong { color: var(--green); }
+
 .stop::before {
   content: attr(data-num);
   position: absolute;
@@ -305,7 +358,7 @@ body {
 }
 .stop-shops {
   display: block;
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 8px 12px;
   border: 2px dashed var(--card-line);
   border-radius: 12px;
@@ -314,10 +367,12 @@ body {
 .stop-shops__title {
   display: block;
   font-family: var(--round);
+  font-weight: 400;
   font-size: 14px;
   color: var(--orange-ink);
   margin-bottom: 2px;
 }
+.stop-shops__list { list-style: none; }
 .stop-shops__row { display: block; font-size: 13px; line-height: 1.65; color: var(--ink-soft); }
 .stop-shops__name { font-weight: 700; color: var(--ink); }
 .stop-shops__name::after { content: "　"; }

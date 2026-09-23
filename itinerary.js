@@ -5,7 +5,8 @@
 // lat / lng：選填。只有填了 API 金鑰的「完整地圖」模式會用到，沒填會自動用 query 查座標。
 // transit：從這一站到下一站的交通說明。
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
-// highlights：卡片內的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
+// more：卡片「更多介紹」展開後的說明，每一項一行，可用 <strong> 粗體。
+// highlights：展開區裡的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
 // img：卡片右側插畫（img/ 資料夾內檔名，不含 .png）；沒有插畫可改填 emoji。
 const TRIP = {
   eyebrow: "ITINERARY · 2026–2027",
@@ -35,6 +36,11 @@ const TRIP = {
             zh: "走國道 1 號南下，車程約 2 小時。建議前一晚加滿油，早點出發避開跨年連假車潮。",
             en: "Head south on National Freeway 1, about 2 hours. Fill up the tank the night before and leave early to beat New Year's Eve traffic."
           },
+          more: [
+            { zh: "車站旁的<strong>紅磚舊車站</strong>是日治時期留下的古蹟建築，出發前可以順便拍張照。", en: "Next to the station is the <strong>red-brick old station</strong>, a Japanese-era heritage building — worth a quick photo before we leave." },
+            { zh: "8:30 出發前先在車站附近吃早餐、買飲料，上高速公路後要到嘉義才會再停。", en: "Grab breakfast and drinks near the station before 8:30 — the next stop is Chiayi." },
+            { zh: "跨年連假南下車多，導航若顯示國道 1 號塞車，可改走國道 3 號。", en: "Holiday traffic heads south on New Year's Eve; if Freeway 1 is jammed, switch to Freeway 3." }
+          ],
           img: "train", query: "台中火車站", lat: 24.1372, lng: 120.6869,
           transit: { zh: "國道 1 號　·　約 2 小時　·　110 km", en: "Freeway 1 · ~2 hrs · 110 km" }
         },
@@ -46,6 +52,11 @@ const TRIP = {
             en: "A herbal-cuisine restaurant above a traditional Chinese medicine shop. Its signature chicken soup is light and soothing — a gentle first stop in Chiayi."
           },
           pills: [{ text: { zh: "MON / TUE 公休", en: "Closed MON / TUE" }, warn: true }, { text: { zh: "建議先訂位", en: "Book ahead" } }],
+          more: [
+            { zh: "一樓是中藥行、餐廳在<strong>二樓</strong>，上樓前別走錯門。", en: "The ground floor is a Chinese medicine shop; the restaurant is <strong>upstairs</strong>." },
+            { zh: "訂位時就先說明<strong>有一位不吃牛</strong>，請店家推薦適合的藥膳。", en: "When booking, mention that <strong>one guest doesn't eat beef</strong> and ask for suitable dishes." },
+            { zh: "招牌雞湯口味清爽，第一次吃藥膳的朋友也容易接受。", en: "The signature chicken soup is light — an easy introduction to herbal cuisine." }
+          ],
           img: "bowl", query: "心宜草堂 嘉義市",
           transit: { zh: "開車 5 分鐘　·　1 km", en: "5 min drive · 1 km" }
         },
@@ -66,6 +77,12 @@ const TRIP = {
             { name: { zh: "奮起福餅創始店", en: "Fenqi Fu Bing (original)" }, item: { zh: "傳統糕餅", en: "Traditional pastries" } }
           ],
           pills: [{ text: { zh: "10:00–18:00 全年開放", en: "Open daily 10:00–18:00" } }],
+          more: [
+            { zh: "這裡原本是阿里山林業開發時期的<strong>林務員工宿舍</strong>，整修後變成文創園區，免門票入園。", en: "These were <strong>forestry staff quarters</strong> from the era of Alishan logging, now restored into a free-entry creative village." },
+            { zh: "旁邊就是<strong>阿里山林業鐵路北門驛</strong>，老木造車站也很好拍。", en: "Right next door is <strong>Beimen Station</strong> of the Alishan Forest Railway — a charming old wooden station." },
+            { zh: "想穿和服拍照的話，<strong>先確認和服店當天有營業</strong>（有店家週四公休的紀錄，12/31 剛好是週四）。", en: "For kimono photos, <strong>check the rental shop is open</strong> — at least one has closed on Thursdays, and Dec 31 is a Thursday." },
+            { zh: "下午 4 點要去吃林聰明，點心淺嚐就好，別吃太飽。", en: "Dinner is at 4 pm, so keep the snacks light." }
+          ],
           img: "fox", query: "檜意森活村 嘉義市",
           transit: { zh: "開車 10 分鐘　·　2 km（返回市區）", en: "10 min drive · 2 km (back downtown)" }
         },
@@ -77,6 +94,11 @@ const TRIP = {
             en: "Chiayi's must-eat. Free refills of the signature fish-head casserole soup; add turkey rice and braised tofu & egg. Going early avoids the peak queue."
           },
           pills: [{ text: { zh: "TUE 公休", en: "Closed TUE" }, warn: true }, { text: { zh: "不接受訂位", en: "No reservations" }, warn: true }],
+          more: [
+            { zh: "砂鍋魚頭是嘉義代表小吃：炸過的魚頭配白菜、豆腐等料，湯頭帶<strong>沙茶</strong>香。", en: "Fish-head casserole is Chiayi's signature dish: fried fish head with napa cabbage and tofu in a <strong>shacha</strong>-flavoured broth." },
+            { zh: "不吃牛：點餐前可以<strong>跟店家確認湯底和配料</strong>，放心再吃。", en: "No beef: <strong>ask the staff about the broth and toppings</strong> before ordering, just to be sure." },
+            { zh: "一定要配一碗<strong>火雞肉飯</strong>，這是嘉義最具代表性的在地小吃。", en: "Pair it with <strong>turkey rice</strong> — Chiayi's most famous hometown dish." }
+          ],
           img: "chef", query: "林聰明沙鍋魚頭 中正路 嘉義市",
           transit: { zh: "步行 1 分鐘　·　70 m（同一條中正路）", en: "1 min walk · 70 m (same street)" }
         },
@@ -88,6 +110,10 @@ const TRIP = {
             en: "A popular local drink shop. Try the signature grapefruit green tea or lemon green tea for the drive up the mountain."
           },
           pills: [{ text: { zh: "MON / TUE 公休", en: "Closed MON / TUE" }, warn: true }],
+          more: [
+            { zh: "接下來是 2 小時山路，飲料<strong>點少冰</strong>，上山後溫度會下降很多。", en: "Two hours of mountain road ahead — order <strong>less ice</strong>, it gets much colder up there." },
+            { zh: "容易暈車的話，出發前先吃暈車藥，山路彎道很多。", en: "If you get carsick, take something before we leave — the road has many bends." }
+          ],
           img: "drink", query: "源興御香屋 中正 嘉義市",
           transit: { zh: "台 18 阿里山公路　·　山路約 2 小時　·　55 km", en: "Hwy 18 Alishan Road · ~2 hrs mountain road · 55 km" }
         },
@@ -99,6 +125,11 @@ const TRIP = {
             en: "In Zhonghe Village, Zhuqi — 10 minutes' drive from Fenqihu. Surrounded by tea gardens; count down to the New Year under the stars."
           },
           pills: [{ text: { zh: "21:00 前入住 · 已預留緩衝", en: "Check in by 21:00 · buffer included" } }],
+          more: [
+            { zh: "山區晚上很冷，<strong>外套、帽子放在隨手拿得到的地方</strong>，下車就穿。", en: "Mountain nights are cold — keep <strong>jackets and hats within reach</strong> for when we arrive." },
+            { zh: "跨年夜遠離光害，天氣好的話很適合在民宿外看星星倒數。", en: "Far from city lights — on a clear night it's perfect for stargazing into the New Year." },
+            { zh: "最後一段是山區小路，照導航慢慢開，晚到記得先打電話給民宿。", en: "The last stretch is a narrow mountain road — drive slowly and call the B&B if we're running late." }
+          ],
           img: "cabin", query: "宣信民宿 竹崎鄉中和村"
         }
       ],
