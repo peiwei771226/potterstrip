@@ -195,8 +195,25 @@
           box.appendChild(el("h3", "stop-shops__title", `🛍️ ${t(stop.highlightsTitle)}`));
           const rows = el("ul", "stop-shops__list");
           stop.highlights.forEach((h) => {
-            const row = el("li", "stop-shops__row");
-            row.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
+            const row = el("li", h.img ? "stop-shops__row stop-shops__row--img" : "stop-shops__row");
+            const text = el("span", "stop-shops__text");
+            text.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
+            if (h.img) {
+              const img = el("img", "stop-shops__img");
+              img.src = h.img;
+              img.alt = `${t(h.name)}｜${t(h.item)}`;
+              img.loading = "lazy";
+              img.referrerPolicy = "no-referrer";
+              row.appendChild(img);
+              if (h.creditUrl) {
+                const credit = el("a", "stop-shops__credit", t(h.credit));
+                credit.href = h.creditUrl;
+                credit.target = "_blank";
+                credit.rel = "noopener";
+                text.appendChild(credit);
+              }
+            }
+            row.appendChild(text);
             rows.appendChild(row);
           });
           box.appendChild(rows);

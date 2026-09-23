@@ -8,7 +8,7 @@
 // more：卡片「更多介紹」展開後的說明，每一項一行，可用 <strong> 粗體。
 // photos：展開區的補充照片，只用 Wikimedia Commons 等開放授權照片，附上作者、授權、來源頁；
 //   exact: true 代表照片就是該地點。不要放 AI 圖或非該地點的示意照。
-// highlights：展開區裡的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
+// highlights：展開區裡的「名店」小清單；可加 img（店家官方圖片網址）＋ credit / creditUrl 標示來源，[{ name, item }]，標題用 highlightsTitle。
 // 卡片右側照片：有 Google Maps API 金鑰時自動抓該地點的 Google 地圖使用者照片；
 //   noPhotos: true 的站完全不放照片。
 //   沒有金鑰時用 photos 裡 exact: true（照片就是該地點本身）的那張；都沒有就不放圖（emoji 仍可用）。
@@ -78,7 +78,13 @@ const TRIP = {
             { name: { zh: "森咖啡", en: "Mori Coffee" }, item: { zh: "鬆餅、宇治金時刨冰", en: "Pancakes, matcha red-bean shaved ice" } },
             { name: { zh: "彩虹燒", en: "Rainbow cakes" }, item: { zh: "天然食材上色的彩色點心", en: "Colourful treats tinted with natural ingredients" } },
             { name: { zh: "旺萊山", en: "Wang Lai Shan" }, item: { zh: "土鳳梨酥", en: "Pineapple cakes" } },
-            { name: { zh: "奮起福餅創始店", en: "Fenqi Fu Bing (original)" }, item: { zh: "傳統糕餅", en: "Traditional pastries" } }
+            {
+              name: { zh: "奮起福餅創始店", en: "Fenchifu (original shop)" },
+              item: { zh: "奮起福米餅：少油低糖、保留米香", en: "Rice crackers — low oil, low sugar" },
+              img: "https://shoplineimg.com/58c02d6772fdc0b34f003273/615d4f6ec2e921002d387199/375x.webp?source_format=jpg",
+              credit: { zh: "圖片：奮起福官方商店", en: "Photo: Fenchifu official store" },
+              creditUrl: "https://www.fenchifu.com/"
+            }
           ],
           pills: [{ text: { zh: "10:00–18:00 全年開放", en: "Open daily 10:00–18:00" } }],
           more: [
