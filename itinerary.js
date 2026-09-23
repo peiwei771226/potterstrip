@@ -27,10 +27,10 @@ const TRIP = {
       title: { zh: "台中 → 嘉義 → 阿里山", en: "Taichung → Chiayi → Alishan" },
       subtitle: { zh: "嘉義市美食文青 + 山區民宿入住", en: "Chiayi food & culture + a mountain B&B stay" },
       stats: [
-        { icon: "📍", num: "6", label: "Stops" },
+        { icon: "📍", num: "7", label: "Stops" },
         { icon: "🛣️", num: "~200", label: "km" },
         { icon: "🚗", num: "~4h", label: "Drive" },
-        { icon: "🏡", num: "19:45", label: "Check-in" }
+        { icon: "🏡", num: "20:00", label: "Check-in" }
       ],
       stops: [
         {
@@ -125,14 +125,30 @@ const TRIP = {
           },
           pills: [{ text: { zh: "MON / TUE 公休", en: "Closed MON / TUE" }, warn: true }],
           more: [
-            { zh: "接下來是 2 小時山路，飲料<strong>點少冰</strong>，上山後溫度會下降很多。", en: "Two hours of mountain road ahead — order <strong>less ice</strong>, it gets much colder up there." },
+            { zh: "等一下就要上山，飲料<strong>點少冰</strong>，山上溫度會下降很多。", en: "We head up the mountain soon — order <strong>less ice</strong>, it gets much colder up there." },
             { zh: "容易暈車的話，出發前先吃暈車藥，山路彎道很多。", en: "If you get carsick, take something before we leave — the road has many bends." }
           ],
           query: "源興御香屋 中正 嘉義市",
+          transit: { zh: "市區內　·　開車約 5 分鐘", en: "Across downtown · ~5 min drive" }
+        },
+        {
+          time: "17:45–18:00", kind: { zh: "外帶飲料", en: "Drinks to go" },
+          name: { zh: "知更鳥巢鮮果茶飲（民族店）", en: "Robin's Nest Fresh Fruit Tea (Minzu branch)" },
+          desc: {
+            zh: "嘉義在地人激推的鮮果茶飲店，1997 年創立。招牌葡萄柚綠茶果肉很多、不用排長隊，還有百香綠茶、鳳梨綠茶。",
+            en: "A local favourite fruit-tea shop founded in 1997. Its grapefruit green tea is packed with pulp and the queue is short; passion fruit and pineapple green teas are good too."
+          },
+          pills: [{ text: { zh: "MON 公休", en: "Closed MON" }, warn: true }, { text: { zh: "10:00–20:00", en: "Open 10:00–20:00" } }],
+          more: [
+            { zh: "在地人常拿它跟源興御香屋比較：<strong>兩家的葡萄柚綠茶可以各買一杯比比看</strong>，或這家改點百香綠、鳳梨綠。", en: "Locals love comparing it with Yuan Xing — <strong>get a grapefruit green tea from each and taste-test</strong>, or try passion fruit or pineapple green tea here." },
+            { zh: "喝完這杯就要上山了，<strong>18:00 前出發</strong>，最晚 21:00 入住還有 1 小時緩衝。", en: "This is the last stop before the mountain — <strong>leave by 18:00</strong> to keep an hour's buffer before the 21:00 check-in cutoff." },
+            { zh: "另有國華街分店（週日公休），民族店離中正路比較近。", en: "There's also a Guohua St. branch (closed Sundays); the Minzu branch is closer to Zhongzheng Rd." }
+          ],
+          query: "知更鳥巢鮮果茶飲 民族店 嘉義市",
           transit: { zh: "台 18 阿里山公路　·　山路約 2 小時　·　55 km", en: "Hwy 18 Alishan Road · ~2 hrs mountain road · 55 km" }
         },
         {
-          time: "19:45", kind: { zh: "抵達 Check-in", en: "Check-in" },
+          time: "20:00", kind: { zh: "抵達 Check-in", en: "Check-in" },
           name: { zh: "宣信民宿", en: "Xuanxin B&B" }, final: true,
           desc: {
             zh: "位於竹崎鄉中和村，距奮起湖車程 10 分鐘。周邊茶園環繞，夜晚可觀星——跨年夜就在山上看星星倒數。",
@@ -157,8 +173,8 @@ const TRIP = {
           en: "Lin Tsung-Ming <strong>takes no reservations</strong>; New Year's Eve may be busier than usual, so the early slot matters"
         },
         {
-          zh: "台 18 阿里山公路夜間彎多、山霧多，<strong>建議天黑前上山</strong>；若延誤到 18:30 後仍未出發，請聯絡民宿說明晚到",
-          en: "Highway 18 is winding and foggy at night — <strong>drive up before dark</strong>. If we still haven't left by 18:30, call the B&B about a late arrival"
+          zh: "台 18 阿里山公路夜間彎多、山霧多，<strong>建議天黑前上山</strong>，知更鳥巢買完就出發；若延誤到 18:30 後仍未出發，請聯絡民宿說明晚到",
+          en: "Highway 18 is winding and foggy at night — <strong>drive up before dark</strong> and leave right after Robin's Nest. If we still haven't left by 18:30, call the B&B about a late arrival"
         },
         {
           zh: "檜意森活村假日停車位緊張，可停在附近「嘉義文化創意產業園區」再步行 5 分鐘過來",
