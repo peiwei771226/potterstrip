@@ -10,6 +10,7 @@
 //   exact: true 代表照片就是該地點。不要放 AI 圖或非該地點的示意照。
 // highlights：展開區裡的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
 // 卡片右側照片：有 Google Maps API 金鑰時自動抓該地點的 Google 地圖使用者照片；
+//   noPhotos: true 的站完全不放照片。
 //   沒有金鑰時用 photos 裡 exact: true（照片就是該地點本身）的那張；都沒有就不放圖（emoji 仍可用）。
 const TRIP = {
   eyebrow: "ITINERARY · 2026–2027",
@@ -44,11 +45,7 @@ const TRIP = {
             { zh: "8:30 出發前先在車站附近吃早餐、買飲料，上高速公路後要到嘉義才會再停。", en: "Grab breakfast and drinks near the station before 8:30 — the next stop is Chiayi." },
             { zh: "跨年連假南下車多，導航若顯示國道 1 號塞車，可改走國道 3 號。", en: "Holiday traffic heads south on New Year's Eve; if Freeway 1 is jammed, switch to Freeway 3." }
           ],
-          photos: [
-            { exact: true, src: "img/photos/taichung-old-station.jpg", caption: { zh: "台中舊車站（紅磚古蹟）", en: "Old Taichung Station (red-brick heritage)" },
-              author: "姒姓賢寧", license: "CC BY-SA 4.0", page: "https://commons.wikimedia.org/wiki/File:Old_Taichung_Station_in_March_2026.jpg" }
-          ],
-          query: "台中火車站", lat: 24.1372, lng: 120.6869,
+          noPhotos: true, query: "台中火車站", lat: 24.1372, lng: 120.6869,
           transit: { zh: "國道 1 號　·　約 2 小時　·　110 km", en: "Freeway 1 · ~2 hrs · 110 km" }
         },
         {
@@ -207,7 +204,7 @@ const TRIP = {
         {
           time: "~18:00", kind: "回到台中", name: "台中火車站", final: true,
           desc: "元旦收假車潮，國道 3 號北上傍晚可能回堵，時間抓寬一點。晚餐回台中再決定。",
-          query: "台中火車站", lat: 24.1372, lng: 120.6869
+          noPhotos: true, query: "台中火車站", lat: 24.1372, lng: 120.6869
         }
       ],
       warnings: [

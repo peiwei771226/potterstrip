@@ -205,7 +205,7 @@
         const gallery = el("ul", "stop-photos");
         inner.appendChild(gallery);
         fillGallery(gallery, stop);
-        if (stop.query) {
+        if (stop.query && !stop.noPhotos) {
           const gmaps = el("a", "stop-gmaps", ui("morePhotos"));
           gmaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.query)}`;
           gmaps.target = "_blank";
@@ -262,7 +262,7 @@
   // 需要 GOOGLE_MAPS_API_KEY，並在 Google Cloud 啟用「Places API (New)」。
   const placePhotoCache = new Map(); // query -> Promise<[{ url, author, authorUri }]>
   function placePhotos(stop) {
-    if (!useJsApi || !stop.query || !window.google || !google.maps || !google.maps.importLibrary) {
+    if (stop.noPhotos || !useJsApi || !stop.query || !window.google || !google.maps || !google.maps.importLibrary) {
       return Promise.resolve([]);
     }
     if (!placePhotoCache.has(stop.query)) {
