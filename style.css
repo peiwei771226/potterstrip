@@ -173,16 +173,24 @@ body {
 }
 
 /* 統計列＋探頭角色 */
-.stats-wrap { position: relative; margin: 44px 0 30px; }
+.stats-wrap { position: relative; margin: 78px 0 30px; }
+/* 兩位主角從統計列後面探頭 */
 .peek {
   position: absolute;
-  bottom: calc(100% - 6px);
-  height: 50px;
+  bottom: calc(100% - 8px);
+  height: 76px;
   width: auto;
   pointer-events: none;
+  animation: peek 3.2s ease-in-out infinite;
 }
-.peek--left { left: 10px; }
-.peek--right { right: 10px; }
+.peek--left { left: 18px; transform-origin: 50% 100%; }
+.peek--right { right: 18px; transform-origin: 50% 100%; animation-delay: 1.6s; }
+
+@keyframes peek {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-4px) rotate(-4deg); }
+  60% { transform: translateY(0) rotate(3deg); }
+}
 
 .stats {
   position: relative;
@@ -605,6 +613,6 @@ body {
   .title { font-size: 25px; }
   .stop-art { width: 72px; height: 64px; }
   .stop-emoji { width: 64px; font-size: 40px; }
-  .peek { height: 40px; }
+  .peek { height: 64px; }
   .warnings__bunny { left: 130px; }
 }
