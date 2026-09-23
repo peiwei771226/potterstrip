@@ -42,7 +42,7 @@
       notFound: (n) => `找不到「${n}」的位置，請在行程檔補上 lat / lng`,
       mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS",
       more: "更多介紹 ▾", less: "收起 ▴", morePhotos: "📸 到 Google 地圖看更多實拍照片 ↗",
-      gPhoto: "Google 地圖使用者照片"
+      gPhoto: "Google 地圖使用者照片", source: "圖片來源：", slash: "／", gmapsName: "Google 地圖"
     },
     en: {
       htmlLang: "en", mapHl: "en",
@@ -55,7 +55,7 @@
       notFound: (n) => `Couldn't find "${n}" — add lat / lng in the itinerary file`,
       mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS",
       more: "More details ▾", less: "Show less ▴", morePhotos: "📸 See more real photos on Google Maps ↗",
-      gPhoto: "Photo from Google Maps"
+      gPhoto: "Photo from Google Maps", source: "Image source: ", slash: " / ", gmapsName: "Google Maps"
     }
   };
   const LANG_KEY = "potterstrip.lang";
@@ -195,25 +195,8 @@
           box.appendChild(el("h3", "stop-shops__title", `🛍️ ${t(stop.highlightsTitle)}`));
           const rows = el("ul", "stop-shops__list");
           stop.highlights.forEach((h) => {
-            const row = el("li", h.img ? "stop-shops__row stop-shops__row--img" : "stop-shops__row");
-            const text = el("span", "stop-shops__text");
-            text.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
-            if (h.img) {
-              const img = el("img", "stop-shops__img");
-              img.src = h.img;
-              img.alt = `${t(h.name)}｜${t(h.item)}`;
-              img.loading = "lazy";
-              img.referrerPolicy = "no-referrer";
-              row.appendChild(img);
-              if (h.creditUrl) {
-                const credit = el("a", "stop-shops__credit", t(h.credit));
-                credit.href = h.creditUrl;
-                credit.target = "_blank";
-                credit.rel = "noopener";
-                text.appendChild(credit);
-              }
-            }
-            row.appendChild(text);
+            const row = el("li", "stop-shops__row");
+            row.append(el("span", "stop-shops__name", t(h.name)), el("span", "stop-shops__item", t(h.item)));
             rows.appendChild(row);
           });
           box.appendChild(rows);
@@ -296,6 +279,13 @@
     return placePhotoCache.get(stop.query);
   }
 
+  // 圖片來源文字：店家圖用 credit；Commons 圖用 作者／Wikimedia Commons（授權）
+  function creditText(ph) {
+    if (ph.credit) return `${ui("source")}${t(ph.credit)}`;
+    const lic = ph.license ? (lang === "en" ? ` (${ph.license})` : `（${ph.license}）`) : "";
+    return `${ui("source")}${ph.author}${ui("slash")}Wikimedia Commons${lic}`;
+  }
+
   function exactPhoto(stop) {
     return (stop.photos || []).find((p) => p.exact);
   }
@@ -312,7 +302,7 @@
 
   function fillCover(cover, stop) {
     const exact = exactPhoto(stop);
-    if (exact) setCover(cover, exact.src, t(exact.caption), `📷 ${exact.author}`);
+    if (exact) setCover(cover, exact.src, t(exact.caption), creditText({ ...exact, license: "" }));
     else if (stop.emoji) {
       cover.textContent = stop.emoji;
       cover.classList.add("stop-cover--emoji");
@@ -323,26 +313,27 @@
       if (!list.length || !cover.isConnected) return;
       cover.classList.remove("stop-cover--emoji");
       cover.removeAttribute("aria-hidden");
-      setCover(cover, list[0].url, `${t(stop.name)}｜${ui("gPhoto")}`, `📷 ${list[0].author}`);
+      setCover(cover, list[0].url, `${t(stop.name)}｜${ui("gPhoto")}`, `${ui("source")}${list[0].author}${ui("slash")}${ui("gmapsName")}`);
     });
   }
 
-  function photoItem(src, alt, caption, creditText, creditHref) {
+  function photoItem(src, alt, caption, credit, creditHref, remote) {
     const item = el("li", "stop-photo");
     const fig = el("figure");
     const img = el("img");
     img.src = src;
     img.alt = alt;
     img.loading = "lazy";
+    if (remote) img.referrerPolicy = "no-referrer";
     const cap = el("figcaption");
     cap.appendChild(el("span", "stop-photo__caption", caption));
-    const credit = el(creditHref ? "a" : "span", "stop-photo__credit", creditText);
+    const link = el(creditHref ? "a" : "span", "stop-photo__credit", credit);
     if (creditHref) {
-      credit.href = creditHref;
-      credit.target = "_blank";
-      credit.rel = "noopener";
+      link.href = creditHref;
+      link.target = "_blank";
+      link.rel = "noopener";
     }
-    cap.appendChild(credit);
+    cap.appendChild(link);
     fig.append(img, cap);
     item.appendChild(fig);
     return item;
@@ -350,14 +341,14 @@
 
   function fillGallery(gallery, stop) {
     const commons = (stop.photos || []).map((ph) =>
-      photoItem(ph.src, t(ph.caption), t(ph.caption), `📷 ${ph.author} · ${ph.license}`, ph.page));
+      photoItem(ph.src, t(ph.caption), t(ph.caption), creditText(ph), ph.page, ph.remote));
     gallery.append(...commons);
     gallery.hidden = !commons.length;
 
     placePhotos(stop).then((list) => {
       if (!list.length || !gallery.isConnected) return;
       const items = list.map((p) => photoItem(p.url, `${t(stop.name)}｜${ui("gPhoto")}`, ui("gPhoto"),
-        `📷 ${p.author}`, p.authorUri));
+        `${ui("source")}${p.author}${ui("slash")}${ui("gmapsName")}`, p.authorUri));
       gallery.prepend(...items);
       gallery.hidden = false;
     });

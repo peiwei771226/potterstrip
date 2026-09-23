@@ -7,8 +7,8 @@
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
 // more：卡片「更多介紹」展開後的說明，每一項一行，可用 <strong> 粗體。
 // photos：展開區的補充照片，只用 Wikimedia Commons 等開放授權照片，附上作者、授權、來源頁；
-//   exact: true 代表照片就是該地點。不要放 AI 圖或非該地點的示意照。
-// highlights：展開區裡的「名店」小清單；可加 img（店家官方圖片網址）＋ credit / creditUrl 標示來源，[{ name, item }]，標題用 highlightsTitle。
+//   exact: true 代表照片就是該地點；店家官方圖片用 credit 寫來源名稱、remote: true（直接連店家網址，不存檔）。不要放 AI 圖或非該地點的示意照。
+// highlights：展開區裡的「名店」小清單，[{ name, item }]，標題用 highlightsTitle。
 // 卡片右側照片：有 Google Maps API 金鑰時自動抓該地點的 Google 地圖使用者照片；
 //   noPhotos: true 的站完全不放照片。
 //   沒有金鑰時用 photos 裡 exact: true（照片就是該地點本身）的那張；都沒有就不放圖（emoji 仍可用）。
@@ -78,13 +78,7 @@ const TRIP = {
             { name: { zh: "森咖啡", en: "Mori Coffee" }, item: { zh: "鬆餅、宇治金時刨冰", en: "Pancakes, matcha red-bean shaved ice" } },
             { name: { zh: "彩虹燒", en: "Rainbow cakes" }, item: { zh: "天然食材上色的彩色點心", en: "Colourful treats tinted with natural ingredients" } },
             { name: { zh: "旺萊山", en: "Wang Lai Shan" }, item: { zh: "土鳳梨酥", en: "Pineapple cakes" } },
-            {
-              name: { zh: "奮起福餅創始店", en: "Fenchifu (original shop)" },
-              item: { zh: "奮起福米餅：少油低糖、保留米香", en: "Rice crackers — low oil, low sugar" },
-              img: "https://shoplineimg.com/58c02d6772fdc0b34f003273/615d4f6ec2e921002d387199/375x.webp?source_format=jpg",
-              credit: { zh: "圖片：奮起福官方商店", en: "Photo: Fenchifu official store" },
-              creditUrl: "https://www.fenchifu.com/"
-            }
+            { name: { zh: "奮起福餅創始店", en: "Fenchifu (original shop)" }, item: { zh: "奮起福米餅：少油低糖、保留米香", en: "Rice crackers — low oil, low sugar" } }
           ],
           pills: [{ text: { zh: "10:00–18:00 全年開放", en: "Open daily 10:00–18:00" } }],
           more: [
@@ -97,7 +91,11 @@ const TRIP = {
             { exact: true, src: "img/photos/hinoki-village.jpg", caption: { zh: "檜意森活村園區", en: "Hinoki Village grounds" },
               author: "Mk2010", license: "CC BY-SA 3.0", page: "https://commons.wikimedia.org/wiki/File:Hinoki_Village,_Chiayi_City_20130505.jpg" },
             { exact: true, src: "img/photos/hinoki-kano.jpg", caption: { zh: "村裡的 KANO 故事館（2015 年攝）", en: "KANO Story House in the village (2015)" },
-              author: "Asacyan", license: "CC BY-SA 4.0", page: "https://commons.wikimedia.org/wiki/File:KANO_Story_House,_Hinoki_Village_20151029.jpg" }
+              author: "Asacyan", license: "CC BY-SA 4.0", page: "https://commons.wikimedia.org/wiki/File:KANO_Story_House,_Hinoki_Village_20151029.jpg" },
+            { src: "https://shoplineimg.com/58c02d6772fdc0b34f003273/615d4f6ec2e921002d387199/375x.webp?source_format=jpg",
+              caption: { zh: "奮起福米餅（村裡的奮起福餅創始店）", en: "Fenchifu rice crackers (shop in the village)" },
+              credit: { zh: "奮起福官方網站（fenchifu.com）", en: "Fenchifu official website (fenchifu.com)" },
+              page: "https://www.fenchifu.com/", remote: true }
           ],
           query: "檜意森活村 嘉義市",
           transit: { zh: "開車 10 分鐘　·　2 km（返回市區）", en: "10 min drive · 2 km (back downtown)" }
