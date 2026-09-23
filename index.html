@@ -13,29 +13,34 @@
   <div class="layout" id="layout">
     <aside class="panel" id="panel">
       <header class="masthead">
+        <div class="heroes">
+          <img class="hero hero--left" src="img/hero1.png" alt="">
+          <img class="hero hero--right" src="img/hero2.png" alt="">
+        </div>
+        <div class="banner">
+          <span class="sparkle sparkle--a" aria-hidden="true">✦</span>
+          <span class="sparkle sparkle--b" aria-hidden="true">✧</span>
+          <p class="eyebrow" id="trip-eyebrow"></p>
+          <h1 class="trip-name" id="trip-title"></h1>
+          <p class="trip-sub" id="trip-subtitle"></p>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <nav class="days" id="days" data-i18n-label="days"></nav>
         <div class="lang" role="group" aria-label="語言 Language">
           <button type="button" class="lang__btn" data-lang="zh" lang="zh-Hant">中文</button>
           <button type="button" class="lang__btn" data-lang="en" lang="en">EN</button>
         </div>
-        <p class="eyebrow" id="trip-eyebrow"></p>
-        <p class="trip-name"><span id="trip-title"></span> <span class="sparkle" aria-hidden="true">✦</span></p>
-        <p class="trip-sub" id="trip-subtitle"></p>
-      </header>
-
-      <nav class="days" id="days" data-i18n-label="days"></nav>
+      </div>
 
       <section class="day" aria-live="polite">
-        <div class="day-head">
-          <p class="day-label" id="day-label"></p>
-          <h1 class="title" id="day-title"></h1>
-          <p class="bubble" id="day-subtitle"></p>
-          <span class="sparkle sparkle--a" aria-hidden="true">✦</span>
-          <span class="sparkle sparkle--b" aria-hidden="true">✧</span>
-        </div>
-
-        <div class="stats-wrap">
-          <img class="peek peek--left" src="img/hero1.png" alt="">
-          <img class="peek peek--right" src="img/hero2.png" alt="">
+        <div class="daybox">
+          <div class="daybox__head">
+            <h2 class="title" id="day-title"></h2>
+            <p class="day-label" id="day-label"></p>
+          </div>
+          <p class="daybox__sub" id="day-subtitle"></p>
           <ul class="stats" id="stats"></ul>
         </div>
 

@@ -11,7 +11,7 @@
 // img：卡片右側插畫（img/ 資料夾內檔名，不含 .png）；沒有插畫可改填 emoji。
 const TRIP = {
   eyebrow: "ITINERARY · 2026–2027",
-  title: "Potter's Taiwan Trip",
+  title: { zh: "Potter&小過 台灣之旅", en: "Potter & 小過's Taiwan Trip" },
   subtitle: {
     zh: "給從馬來西亞來的 Potter　·小過 飲食禁忌:不吃牛肉",
     en: "For Potter from Malaysia · 小過 · Dietary restriction: no beef"
