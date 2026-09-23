@@ -167,55 +167,105 @@ const TRIP = {
       ]
     },
     {
-      hidden: true, // 還沒規劃好，先不顯示
-      tab: "1/1 五",
+      tab: { zh: "1/1 五", en: "Jan 1 Fri" },
       label: "DAY 02",
-      title: "阿里山元旦日出 → 奮起湖 → 台中",
-      subtitle: "山上迎接 2027 第一道曙光，下山吃便當逛老街",
+      title: { zh: "元旦日出 → 奮起湖 → 台南", en: "New Year sunrise → Fenqihu → Tainan" },
+      subtitle: { zh: "起床直接退房，山上迎接 2027 第一道曙光，吃完奮起湖便當南下台南", en: "Check out at dawn, greet 2027's first sunrise, then head south to Tainan after a Fenqihu lunchbox" },
       stats: [
-        { icon: "📍", num: "5", label: "Stops" },
-        { icon: "🛣️", num: "~160", label: "km" },
-        { icon: "🚗", num: "~4h", label: "Drive" },
-        { icon: "🌇", num: "~18:00", label: "回台中" }
+        { icon: "📍", num: "4", label: "Stops" },
+        { icon: "🛣️", num: "~170", label: "km" },
+        { icon: "🚗", num: "~3.5h", label: "Drive" },
+        { icon: "🏨", num: "~14:30", label: "Check-in" }
       ],
       stops: [
         {
-          time: "05:40", kind: "摸黑出發", name: "宣信民宿",
-          desc: "帶頭燈或手機手電筒、穿最厚的外套。元旦清晨山上氣溫可能只有個位數。",
+          time: "05:30", kind: { zh: "起床・退房", en: "Wake up & check out" },
+          name: { zh: "宣信民宿", en: "Xuanxin B&B" },
+          desc: {
+            zh: "起床後直接退房，行李上車就出發看日出，不再回民宿。",
+            en: "Check out as soon as we're up, load the car and head straight for the sunrise — no coming back."
+          },
+          more: [
+            { zh: "<strong>前一晚先跟民宿確認可以 5:30 提早退房</strong>，鑰匙怎麼歸還、房費是否已結清。", en: "<strong>Confirm the night before that a 5:30 checkout is OK</strong>, how to return the key, and that the bill is settled." },
+            { zh: "行李前一晚就整理好，早上只拿隨身物品。", en: "Pack the night before so the morning is just grab-and-go." },
+            { zh: "可以問民宿能不能<strong>準備外帶早餐</strong>；不行的話就到奮起湖再吃。", en: "Ask whether the B&B can <strong>pack a takeaway breakfast</strong>; otherwise we'll eat in Fenqihu." },
+            { zh: "帶頭燈或手機手電筒、穿最厚的外套，元旦清晨山上可能只有個位數氣溫。", en: "Bring a torch and the warmest jacket — it may be single digits at dawn." }
+          ],
           emoji: "🌙", query: "宣信民宿 竹崎鄉中和村",
-          transit: "169 縣道 → 台 18　·　約 30–40 分鐘"
+          transit: { zh: "169 縣道 → 台 18　·　約 30–40 分鐘", en: "Road 169 → Hwy 18 · ~30–40 min" }
         },
         {
-          time: "06:30–07:30", kind: "日出", name: "二延平步道",
-          desc: "觀日、雲海、茶園景觀的平台步道，比祝山好到達。從停車場步行約 15 分鐘到觀景台，等 2027 年第一道日出。",
-          pills: [{ text: "元旦人潮多 · 提早到", warn: true }],
+          time: "06:20–07:30", kind: { zh: "元旦日出", en: "New Year sunrise" },
+          name: { zh: "二延平步道", en: "Eryanping Trail" },
+          desc: {
+            zh: "觀日、雲海、茶園景觀的平台步道，比祝山好到達。從停車場走到觀景台，等 2027 年第一道日出。",
+            en: "A viewing-platform trail with sunrise, sea-of-clouds and tea-garden views — easier to reach than Zhushan. Walk up from the car park and wait for 2027's first sunrise."
+          },
+          pills: [{ text: { zh: "元旦人潮多 · 提早到", en: "Busy on New Year · arrive early" }, warn: true }],
+          more: [
+            { zh: "元旦是熱門觀日點，<strong>停車位有限，越早到越好</strong>。", en: "It's a popular New Year spot — <strong>parking is limited, so the earlier the better</strong>." },
+            { zh: "若停不到車或路況管制上不去，沿途茶園邊也能看日出，安全第一。", en: "If parking or traffic control stops us, the tea gardens along the road work too — safety first." },
+            { zh: "等日出時很冷，可以帶保溫瓶裝熱飲。", en: "Waiting in the cold — a thermos of something hot helps." }
+          ],
           emoji: "🌄", query: "二延平步道",
-          transit: "約 30–40 分鐘　·　回民宿"
+          transit: { zh: "台 18 → 169 縣道　·　約 30–40 分鐘", en: "Hwy 18 → Road 169 · ~30–40 min" }
         },
         {
-          time: "08:15–09:45", kind: "早餐・退房", name: "宣信民宿",
-          desc: "回民宿吃早餐、補眠一下再退房。退房時間請先跟民宿確認。",
-          query: "宣信民宿 竹崎鄉中和村",
-          transit: "開車 10 分鐘"
-        },
-        {
-          time: "10:00–13:00", kind: "老街・午餐", name: "奮起湖老街",
-          desc: "阿里山小火車中途站的山城老街。午餐吃奮起湖便當（排骨／雞腿，不含牛），逛車站、老街小吃與糕餅。",
-          pills: [{ text: "便當無牛肉" }, { text: "假日停車較難", warn: true }],
+          time: "08:15–11:30", kind: { zh: "早餐・老街・午餐", en: "Breakfast, old street & lunch" },
+          name: { zh: "奮起湖老街", en: "Fenqihu Old Street" },
+          desc: {
+            zh: "阿里山小火車中途站的山城老街。先吃早餐、逛車站和老街，出發前吃奮起湖便當（排骨／雞腿，不含牛）當午餐。",
+            en: "A mountain village on the Alishan Forest Railway. Breakfast first, stroll the station and old street, then an early Fenqihu lunchbox (pork chop / chicken leg, no beef) before hitting the road."
+          },
+          pills: [{ text: { zh: "便當無牛肉", en: "Lunchbox: no beef" } }, { text: { zh: "假日停車較難", en: "Parking tight on holidays" }, warn: true }],
+          more: [
+            { zh: "老街店家多半早上才陸續開門，早餐可先找已營業的小吃店或便利商店。", en: "Shops open gradually through the morning — grab breakfast wherever is already open." },
+            { zh: "<strong>11:30 前出發</strong>，下午才能在台南從容入住。", en: "<strong>Leave by 11:30</strong> so we reach Tainan with time to spare." },
+            { zh: "便當可以外帶，在車上吃也可以節省時間。", en: "Lunchboxes can be taken away and eaten on the road." }
+          ],
+          photos: [
+            { exact: true, src: "img/photos/fenqihu-street.jpg", caption: { zh: "奮起湖老街（2016 年攝）", en: "Fenqihu old street (2016)" },
+              author: "Peter C in Toronto Canada", license: "CC BY 2.0", page: "https://commons.wikimedia.org/wiki/File:2016-05-04_street_at_Fenqihu,_Chiayi_County,_Taiwan.jpg" }
+          ],
           query: "奮起湖老街",
-          transit: "169 縣道下山 → 國道 3 號　·　約 2.5 小時　·　120 km"
+          transit: { zh: "169 縣道下山 → 國道 3 號南下　·　約 2.5–3 小時　·　約 130 km", en: "Road 169 down → Freeway 3 south · ~2.5–3 hrs · ~130 km" }
         },
         {
-          time: "~18:00", kind: "回到台中", name: "台中火車站", final: true,
-          desc: "元旦收假車潮，國道 3 號北上傍晚可能回堵，時間抓寬一點。晚餐回台中再決定。",
-          noPhotos: true, query: "台中火車站", lat: 24.1372, lng: 120.6869
+          time: "~14:30", kind: { zh: "抵達 Check-in", en: "Check-in" },
+          name: { zh: "台南住宿（待定）", en: "Tainan stay (TBD)" }, final: true,
+          desc: {
+            zh: "住宿還沒訂，訂好後把名稱和地址補上，地圖就會跳到正確位置。",
+            en: "Not booked yet — add the name and address once booked and the map will jump there."
+          },
+          pills: [{ text: { zh: "記得訂房", en: "Book a room" }, warn: true }],
+          more: [
+            { zh: "下山山路彎多，容易暈車的話出發前先吃藥。", en: "The mountain road down is winding — take motion-sickness pills beforehand if needed." },
+            { zh: "元旦下午國道可能車多，時間抓寬一點。", en: "Freeways may be busy on New Year's afternoon — leave some buffer." }
+          ],
+          noPhotos: true, query: "台南市"
         }
       ],
       warnings: [
-        "<strong>元旦阿里山會有交通管制</strong>，出發前一週查「阿里山國家森林遊樂區」與公路局的管制公告，確認台 18 線往石棹方向能否自駕通行",
-        "二延平步道元旦也是熱門觀日點，停車位有限，<strong>越早到越好</strong>；若無法上去，民宿附近茶園也能看日出",
-        "山上清晨很冷，<strong>馬來西亞來的朋友可能沒有厚外套</strong>——出發前確認 Potter 有羽絨衣、帽子、手套",
-        "Potter 不吃牛：點餐時說「<strong>不要牛肉</strong>」，湯頭、滷味若不確定可以先問店家"
+        {
+          zh: "<strong>元旦阿里山會有交通管制</strong>，出發前一週查「阿里山國家森林遊樂區」與公路局的管制公告，確認台 18 線往石棹方向能否自駕通行",
+          en: "<strong>Alishan has New Year traffic control</strong> — a week before, check the Alishan National Forest Recreation Area and highway authority notices to confirm we can drive Hwy 18 towards Shizhuo"
+        },
+        {
+          zh: "<strong>5:30 提早退房要先跟民宿講好</strong>，前一晚把行李整理好、房費結清",
+          en: "<strong>Agree the 5:30 checkout with the B&B in advance</strong>; pack and settle the bill the night before"
+        },
+        {
+          zh: "山上清晨很冷，<strong>確認 Potter 有羽絨衣、帽子、手套</strong>",
+          en: "Dawn in the mountains is cold — <strong>make sure Potter has a down jacket, hat and gloves</strong>"
+        },
+        {
+          zh: "<strong>台南住宿還沒訂</strong>，元旦連假房間可能較緊，早點訂",
+          en: "<strong>Tainan accommodation isn't booked yet</strong> — New Year rooms go fast, book early"
+        },
+        {
+          zh: "Potter 不吃牛：點餐時說「<strong>不要牛肉</strong>」，湯頭、滷味若不確定可以先問店家",
+          en: "Potter doesn't eat beef: say \"<strong>bú yào niú ròu</strong>\" (no beef) when ordering, and ask about broths if unsure"
+        }
       ]
     }
   ]
