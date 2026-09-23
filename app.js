@@ -367,7 +367,12 @@
     openLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
   }
 
+  function hasPlace(stop) {
+    return Boolean(stop.query) || stop.lat !== undefined;
+  }
+
   function showStopOnMap(stop) {
+    if (!hasPlace(stop)) return; // 還沒決定地點的站（例如住宿未定）不動地圖
     setOpenLink(searchTerm(stop));
     if (useJsApi) {
       if (!map) return;
@@ -431,6 +436,7 @@
 
     DAYS.forEach((day, d) => {
       day.stops.forEach((stop, i) => {
+        if (!hasPlace(stop)) return;
         locate(stop).then((pos) => {
           if (!pos) return;
           const key = searchTerm(stop);

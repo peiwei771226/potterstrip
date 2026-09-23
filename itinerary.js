@@ -1,7 +1,7 @@
 // 行程資料：直接改這個檔案就能更新網站內容。
 // 雙語：文字欄位可以寫 { zh: "中文", en: "English" }；只寫字串或沒填 en 時，英文模式會顯示中文。
 // hidden: true 的那一天不會出現在網站上（還沒規劃好時用）。
-// query：Google 地圖搜尋字串（右側地圖用它定位），寫越完整越準，不用翻譯。
+// query：Google 地圖搜尋字串（右側地圖用它定位），寫越完整越準，不用翻譯；沒有 query 也沒有 lat/lng 的站不會動地圖。
 // lat / lng：選填。只有填了 API 金鑰的「完整地圖」模式會用到，沒填會自動用 query 查座標。
 // transit：從這一站到下一站的交通說明。
 // pills：{ text, warn } warn 為 true 顯示橘色警示。
@@ -232,17 +232,16 @@ const TRIP = {
         },
         {
           time: "~14:30", kind: { zh: "抵達 Check-in", en: "Check-in" },
-          name: { zh: "台南住宿（待定）", en: "Tainan stay (TBD)" }, final: true,
+          name: { zh: "住宿在台南", en: "Stay in Tainan" }, final: true,
           desc: {
-            zh: "住宿還沒訂，訂好後把名稱和地址補上，地圖就會跳到正確位置。",
-            en: "Not booked yet — add the name and address once booked and the map will jump there."
+            zh: "今晚住在台南。",
+            en: "Tonight we stay in Tainan."
           },
-          pills: [{ text: { zh: "記得訂房", en: "Book a room" }, warn: true }],
           more: [
             { zh: "下山山路彎多，容易暈車的話出發前先吃藥。", en: "The mountain road down is winding — take motion-sickness pills beforehand if needed." },
             { zh: "元旦下午國道可能車多，時間抓寬一點。", en: "Freeways may be busy on New Year's afternoon — leave some buffer." }
           ],
-          noPhotos: true, query: "台南市"
+          noPhotos: true
         }
       ],
       warnings: [
