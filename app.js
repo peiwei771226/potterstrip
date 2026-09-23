@@ -41,7 +41,8 @@
       geoErr: { 1: "未允許定位，請在瀏覽器設定開啟位置權限", 2: "目前無法取得位置", 3: "定位逾時，請再試一次" },
       notFound: (n) => `找不到「${n}」的位置，請在行程檔補上 lat / lng`,
       mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS",
-      more: "更多介紹 ▾", less: "收起 ▴", morePhotos: "📸 到 Google 地圖看更多實拍照片 ↗"
+      more: "更多介紹 ▾", less: "收起 ▴", morePhotos: "📸 到 Google 地圖看更多實拍照片 ↗",
+      gPhoto: "Google 地圖使用者照片"
     },
     en: {
       htmlLang: "en", mapHl: "en",
@@ -53,7 +54,8 @@
       geoErr: { 1: "Location permission denied — enable it in browser settings", 2: "Location unavailable right now", 3: "Location timed out, please try again" },
       notFound: (n) => `Couldn't find "${n}" — add lat / lng in the itinerary file`,
       mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS",
-      more: "More details ▾", less: "Show less ▴", morePhotos: "📸 See more real photos on Google Maps ↗"
+      more: "More details ▾", less: "Show less ▴", morePhotos: "📸 See more real photos on Google Maps ↗",
+      gPhoto: "Photo from Google Maps"
     }
   };
   const LANG_KEY = "potterstrip.lang";
@@ -159,18 +161,10 @@
         body.appendChild(meta);
       }
       main.appendChild(body);
-      // 插畫純裝飾，alt 留空
-      if (stop.img) {
-        const art = el("img", "stop-art");
-        art.src = `img/${stop.img}.png`;
-        art.alt = "";
-        art.loading = "lazy";
-        main.appendChild(art);
-      } else if (stop.emoji) {
-        const art = el("span", "stop-emoji stop-art", stop.emoji);
-        art.setAttribute("aria-hidden", "true");
-        main.appendChild(art);
-      }
+      // 卡片右側：真實照片（Google 地圖使用者照片 → 開放授權實景照），沒有就不放
+      const cover = el("span", "stop-cover");
+      main.appendChild(cover);
+      fillCover(cover, stop);
       main.addEventListener("click", () => selectStop(stop, card));
       card.appendChild(main);
 
@@ -208,27 +202,9 @@
           box.appendChild(rows);
           inner.appendChild(box);
         }
-        if (stop.photos && stop.photos.length) {
-          const gallery = el("ul", "stop-photos");
-          stop.photos.forEach((ph) => {
-            const item = el("li", "stop-photo");
-            const fig = el("figure");
-            const img = el("img");
-            img.src = ph.src;
-            img.alt = t(ph.caption);
-            img.loading = "lazy";
-            const cap = el("figcaption");
-            const credit = el("a", "stop-photo__credit", `📷 ${ph.author} · ${ph.license}`);
-            credit.href = ph.page;
-            credit.target = "_blank";
-            credit.rel = "noopener";
-            cap.append(el("span", "stop-photo__caption", t(ph.caption)), credit);
-            fig.append(img, cap);
-            item.appendChild(fig);
-            gallery.appendChild(item);
-          });
-          inner.appendChild(gallery);
-        }
+        const gallery = el("ul", "stop-photos");
+        inner.appendChild(gallery);
+        fillGallery(gallery, stop);
         if (stop.query) {
           const gmaps = el("a", "stop-gmaps", ui("morePhotos"));
           gmaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.query)}`;
@@ -279,6 +255,95 @@
     activeStopEl = btn;
     btn.classList.add("is-active");
     showStopOnMap(stop);
+  }
+
+  // ---------- 真實照片 ----------
+  // Google 地圖使用者照片：透過 Places API 即時讀取並標示拍攝者（依 Google 條款不下載存放）。
+  // 需要 GOOGLE_MAPS_API_KEY，並在 Google Cloud 啟用「Places API (New)」。
+  const placePhotoCache = new Map(); // query -> Promise<[{ url, author, authorUri }]>
+  function placePhotos(stop) {
+    if (!useJsApi || !stop.query || !window.google || !google.maps || !google.maps.importLibrary) {
+      return Promise.resolve([]);
+    }
+    if (!placePhotoCache.has(stop.query)) {
+      placePhotoCache.set(stop.query, google.maps.importLibrary("places")
+        .then(({ Place }) => Place.searchByText({
+          textQuery: stop.query, fields: ["photos"], maxResultCount: 1, region: "tw"
+        }))
+        .then(({ places }) => ((places[0] && places[0].photos) || []).slice(0, 6).map((p) => {
+          const a = (p.authorAttributions && p.authorAttributions[0]) || {};
+          return { url: p.getURI({ maxWidth: 800 }), author: a.displayName || "Google Maps", authorUri: a.uri || "" };
+        }))
+        .catch(() => []));
+    }
+    return placePhotoCache.get(stop.query);
+  }
+
+  function exactPhoto(stop) {
+    return (stop.photos || []).find((p) => p.exact);
+  }
+
+  function setCover(cover, src, alt, credit) {
+    cover.innerHTML = "";
+    cover.hidden = false;
+    const img = el("img", "stop-cover__img");
+    img.src = src;
+    img.alt = alt;
+    img.loading = "lazy";
+    cover.append(img, el("span", "stop-cover__credit", credit));
+  }
+
+  function fillCover(cover, stop) {
+    const exact = exactPhoto(stop);
+    if (exact) setCover(cover, exact.src, t(exact.caption), `📷 ${exact.author}`);
+    else if (stop.emoji) {
+      cover.textContent = stop.emoji;
+      cover.classList.add("stop-cover--emoji");
+      cover.setAttribute("aria-hidden", "true");
+    } else cover.hidden = true;
+
+    placePhotos(stop).then((list) => {
+      if (!list.length || !cover.isConnected) return;
+      cover.classList.remove("stop-cover--emoji");
+      cover.removeAttribute("aria-hidden");
+      setCover(cover, list[0].url, `${t(stop.name)}｜${ui("gPhoto")}`, `📷 ${list[0].author}`);
+    });
+  }
+
+  function photoItem(src, alt, caption, creditText, creditHref) {
+    const item = el("li", "stop-photo");
+    const fig = el("figure");
+    const img = el("img");
+    img.src = src;
+    img.alt = alt;
+    img.loading = "lazy";
+    const cap = el("figcaption");
+    cap.appendChild(el("span", "stop-photo__caption", caption));
+    const credit = el(creditHref ? "a" : "span", "stop-photo__credit", creditText);
+    if (creditHref) {
+      credit.href = creditHref;
+      credit.target = "_blank";
+      credit.rel = "noopener";
+    }
+    cap.appendChild(credit);
+    fig.append(img, cap);
+    item.appendChild(fig);
+    return item;
+  }
+
+  function fillGallery(gallery, stop) {
+    const commons = (stop.photos || []).map((ph) =>
+      photoItem(ph.src, t(ph.caption), t(ph.caption), `📷 ${ph.author} · ${ph.license}`, ph.page));
+    gallery.append(...commons);
+    gallery.hidden = !commons.length;
+
+    placePhotos(stop).then((list) => {
+      if (!list.length || !gallery.isConnected) return;
+      const items = list.map((p) => photoItem(p.url, `${t(stop.name)}｜${ui("gPhoto")}`, ui("gPhoto"),
+        `📷 ${p.author}`, p.authorUri));
+      gallery.prepend(...items);
+      gallery.hidden = false;
+    });
   }
 
   // ---------- 右側地圖 ----------

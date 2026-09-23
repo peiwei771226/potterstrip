@@ -269,7 +269,7 @@ body {
   border-color: var(--green);
   transform: translateY(-2px) rotate(-.3deg);
 }
-.stop:hover .stop-art { animation: wiggle .6s ease-in-out; }
+.stop:hover .stop-cover__img { animation: wiggle .6s ease-in-out; }
 .stop.is-active {
   border-color: var(--green);
   background: #f3faf2;
@@ -340,6 +340,7 @@ body {
 .stop-more__list strong { color: var(--green); }
 
 /* 展開區照片：橫向捲動 */
+.stop-photos[hidden] { display: none; }
 .stop-photos {
   list-style: none;
   display: flex;
@@ -452,19 +453,38 @@ body {
 
 .stop-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 
-.stop-art {
+.stop-cover {
   flex: none;
-  width: 110px;
-  height: 84px;
-  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 112px;
   align-self: center;
 }
-.stop-emoji {
-  flex: none;
+.stop-cover[hidden] { display: none; }
+.stop-cover__img {
+  display: block;
+  width: 100%;
+  height: 84px;
+  object-fit: cover;
+  border: 2px solid var(--card-line);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.stop-cover__credit {
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stop-cover--emoji {
   width: 84px;
   font-size: 52px;
   line-height: 1;
   text-align: center;
+  display: block;
 }
 
 @keyframes wiggle {
@@ -677,8 +697,9 @@ body {
   .map__bar { left: 20px; bottom: 22px; }
   .trip-name { font-size: 26px; }
   .title { font-size: 20px; }
-  .stop-art { width: 72px; height: 64px; }
-  .stop-emoji { width: 64px; font-size: 40px; }
+  .stop-cover { width: 84px; }
+  .stop-cover__img { height: 66px; }
+  .stop-cover--emoji { width: 64px; font-size: 40px; }
   .hero { height: 70px; }
   .warnings__bunny { left: 130px; }
 }

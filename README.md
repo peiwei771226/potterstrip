@@ -30,6 +30,8 @@ Repo → Settings → Pages → Source 選 `Deploy from a branch`，Branch 選 `
 
 ## 照片來源
 
-`img/photos/` 裡的實拍照片都來自 [Wikimedia Commons](https://commons.wikimedia.org/)，授權為 CC BY-SA / CC0 / 公有領域。每張照片在網站上都標有作者與授權，點擊可到原始頁面。標「示意照」的不是該店家本身的照片。新增照片時請同樣只用開放授權的圖，不要直接抓部落格或店家照片。
+**Google 地圖使用者照片（主要）**：在 `itinerary.js` 填入 `GOOGLE_MAPS_API_KEY`，並在 Google Cloud 同一個專案啟用 **Maps JavaScript API** 與 **Places API (New)**，網站就會用每一站的 `query` 即時向 Google 讀取該地點的照片（含評論照片），卡片右側放第一張，展開區放最多 6 張，並標示拍攝者。依 Google 條款，這些照片不能下載存進專案，只能這樣即時顯示。
 
-`img/` 其他插畫取自使用者提供的 AI 生成圖。
+**開放授權實景照（沒有金鑰時的備用）**：`img/photos/` 裡的照片來自 [Wikimedia Commons](https://commons.wikimedia.org/)（CC BY-SA / CC0），只收照片就是該地點本身的圖，網站上標有作者與授權。不要放 AI 圖或非該地點的示意照。
+
+`img/` 其他圖（兩位主角、兔子、女孩）是使用者提供的插畫。
