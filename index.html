@@ -13,12 +13,16 @@
   <div class="layout" id="layout">
     <aside class="panel" id="panel">
       <header class="masthead">
+        <div class="lang" role="group" aria-label="語言 Language">
+          <button type="button" class="lang__btn" data-lang="zh" lang="zh-Hant">中文</button>
+          <button type="button" class="lang__btn" data-lang="en" lang="en">EN</button>
+        </div>
         <p class="eyebrow" id="trip-eyebrow"></p>
         <p class="trip-name"><span id="trip-title"></span> <span class="sparkle" aria-hidden="true">✦</span></p>
         <p class="trip-sub" id="trip-subtitle"></p>
       </header>
 
-      <nav class="days" id="days" aria-label="選擇日期"></nav>
+      <nav class="days" id="days" data-i18n-label="days"></nav>
 
       <section class="day" aria-live="polite">
         <div class="day-head">
@@ -39,7 +43,7 @@
 
         <div class="warnings" id="warnings-box">
           <img class="warnings__bunny" src="img/bunny.png" alt="">
-          <h2 class="warnings-title">⚠︎ 出發前必看</h2>
+          <h2 class="warnings-title" data-i18n="warnings"></h2>
           <ul id="warnings"></ul>
           <img class="warnings__girl" src="img/girl.png" alt="">
         </div>
@@ -49,19 +53,19 @@
     </aside>
 
     <div class="resizer" id="resizer" role="separator" aria-orientation="vertical"
-         aria-label="拖曳調整行程與地圖寬度" tabindex="0">
+         data-i18n-label="resizer" tabindex="0">
       <span class="resizer__grip" aria-hidden="true"></span>
     </div>
 
     <main class="map">
       <div class="map__frame">
         <div id="map" class="map__canvas"></div>
-        <iframe id="map-frame" class="map__canvas" title="Google 地圖" loading="lazy"
+        <iframe id="map-frame" class="map__canvas" data-i18n-title="mapTitle" title="Google Maps" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
       </div>
       <div class="map__bar">
-        <button type="button" id="locate-btn" class="btn">📍 我的即時位置</button>
-        <a id="open-link" class="btn btn--ghost" target="_blank" rel="noopener">在 Google 地圖開啟</a>
+        <button type="button" id="locate-btn" class="btn"></button>
+        <a id="open-link" class="btn btn--ghost" target="_blank" rel="noopener" data-i18n="openMap"></a>
         <span id="status" class="status" role="status"></span>
       </div>
     </main>

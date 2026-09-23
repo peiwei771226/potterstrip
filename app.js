@@ -15,6 +15,7 @@
   let activeStopEl = null;
   let watchId = null;
   let lastPos = null;
+  let lastAccuracy = 0;
 
   // JS API 模式才會用到
   let map = null;
@@ -24,11 +25,77 @@
   let meAccuracy = null;
   const markers = new Map(); // searchTerm -> google.maps.Marker（同一地點只放一個標記）
 
-  $("trip-eyebrow").textContent = TRIP.eyebrow;
-  $("trip-title").textContent = TRIP.title;
-  $("trip-subtitle").textContent = TRIP.subtitle;
-  $("trip-footer").textContent = TRIP.footer;
-  document.title = TRIP.title;
+  // hidden: true 的天數（還沒規劃好）不顯示
+  const DAYS = TRIP.days.filter((d) => !d.hidden);
+
+  // ---------- 雙語 ----------
+  const UI = {
+    zh: {
+      htmlLang: "zh-Hant", mapHl: "zh-TW",
+      days: "選擇日期", warnings: "⚠︎ 出發前必看", resizer: "拖曳調整行程與地圖寬度",
+      mapTitle: "Google 地圖", openMap: "在 Google 地圖開啟", navigate: "在 Google 地圖導航",
+      locate: "📍 我的即時位置", stopLocate: "📍 停止即時位置",
+      locating: "取得位置中…", tracking: (m) => `定位中・精確度約 ${m} 公尺`,
+      noGeo: "此瀏覽器不支援定位", geoFail: "定位失敗",
+      geoErr: { 1: "未允許定位，請在瀏覽器設定開啟位置權限", 2: "目前無法取得位置", 3: "定位逾時，請再試一次" },
+      notFound: (n) => `找不到「${n}」的位置，請在行程檔補上 lat / lng`,
+      mapLoadFail: "Google 地圖載入失敗，請檢查 API 金鑰", me: "我的位置", stops: "STOPS"
+    },
+    en: {
+      htmlLang: "en", mapHl: "en",
+      days: "Choose a day", warnings: "⚠︎ Before you go", resizer: "Drag to resize the itinerary and map",
+      mapTitle: "Google Maps", openMap: "Open in Google Maps", navigate: "Navigate in Google Maps",
+      locate: "📍 My live location", stopLocate: "📍 Stop live location",
+      locating: "Finding your location…", tracking: (m) => `Live · accurate to ~${m} m`,
+      noGeo: "This browser doesn't support location", geoFail: "Couldn't get your location",
+      geoErr: { 1: "Location permission denied — enable it in browser settings", 2: "Location unavailable right now", 3: "Location timed out, please try again" },
+      notFound: (n) => `Couldn't find "${n}" — add lat / lng in the itinerary file`,
+      mapLoadFail: "Google Maps failed to load — check the API key", me: "My location", stops: "STOPS"
+    }
+  };
+  const LANG_KEY = "potterstrip.lang";
+  let lang = "zh";
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved === "zh" || saved === "en") lang = saved;
+  } catch (e) { /* 無痕模式等情況讀不到，用預設中文 */ }
+
+  // 資料欄位可以是字串或 { zh, en }；英文沒填就顯示中文
+  function t(v) {
+    if (v && typeof v === "object") return v[lang] || v.zh || "";
+    return v || "";
+  }
+  const ui = (key) => UI[lang][key];
+
+  function applyStaticText() {
+    document.documentElement.lang = ui("htmlLang");
+    $("trip-eyebrow").textContent = t(TRIP.eyebrow);
+    $("trip-title").textContent = t(TRIP.title);
+    $("trip-subtitle").textContent = t(TRIP.subtitle);
+    $("trip-footer").textContent = t(TRIP.footer);
+    document.title = t(TRIP.title);
+    document.querySelectorAll("[data-i18n]").forEach((n) => { n.textContent = ui(n.dataset.i18n); });
+    document.querySelectorAll("[data-i18n-label]").forEach((n) => n.setAttribute("aria-label", ui(n.dataset.i18nLabel)));
+    document.querySelectorAll("[data-i18n-title]").forEach((n) => n.setAttribute("title", ui(n.dataset.i18nTitle)));
+    locateBtn.textContent = ui(watchId === null ? "locate" : "stopLocate");
+    document.querySelectorAll(".lang__btn").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  }
+
+  function setLang(next) {
+    if (next === lang) return;
+    lang = next;
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* 同上 */ }
+    const activeIdx = activeStopEl ? [...stopsEl.querySelectorAll(".stop")].indexOf(activeStopEl) : -1;
+    applyStaticText();
+    renderDays();
+    renderDay();
+    // 保留原本選中的景點，不重新載入地圖
+    const again = stopsEl.querySelectorAll(".stop")[activeIdx];
+    if (again) { activeStopEl = again; again.classList.add("is-active"); }
+    if (watchId !== null && lastPos) setStatus(ui("tracking")(lastAccuracy));
+  }
+
+  document.querySelectorAll(".lang__btn").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
 
   // ---------- 左側行程 ----------
   function el(tag, className, text) {
@@ -40,8 +107,8 @@
 
   function renderDays() {
     daysEl.innerHTML = "";
-    TRIP.days.forEach((day, i) => {
-      const btn = el("button", "day-tab", day.tab);
+    DAYS.forEach((day, i) => {
+      const btn = el("button", "day-tab", t(day.tab));
       btn.type = "button";
       btn.setAttribute("aria-pressed", String(i === currentDay));
       btn.addEventListener("click", () => selectDay(i));
@@ -50,10 +117,10 @@
   }
 
   function renderDay() {
-    const day = TRIP.days[currentDay];
-    $("day-label").textContent = `${day.label} · ${day.stops.length} STOPS`;
-    $("day-title").textContent = day.title;
-    $("day-subtitle").textContent = day.subtitle || "";
+    const day = DAYS[currentDay];
+    $("day-label").textContent = `${t(day.label)} · ${day.stops.length} ${ui("stops")}`;
+    $("day-title").textContent = t(day.title);
+    $("day-subtitle").textContent = t(day.subtitle);
 
     const statsEl = $("stats");
     statsEl.innerHTML = "";
@@ -61,7 +128,7 @@
       const li = el("li", "stat");
       const icon = el("span", "stat-icon", s.icon || "");
       icon.setAttribute("aria-hidden", "true");
-      li.append(icon, el("span", "stat-num", s.num), el("span", "stat-label", s.label));
+      li.append(icon, el("span", "stat-num", t(s.num)), el("span", "stat-label", t(s.label)));
       statsEl.appendChild(li);
     });
 
@@ -74,14 +141,14 @@
       btn.dataset.num = String(i + 1);
       const body = el("span", "stop-body");
       body.append(
-        el("span", "stop-time", `${stop.time}　·　${stop.kind}`),
-        el("span", "stop-name", stop.name),
-        el("span", "stop-desc", stop.desc || "")
+        el("span", "stop-time", `${t(stop.time)}　·　${t(stop.kind)}`),
+        el("span", "stop-name", t(stop.name)),
+        el("span", "stop-desc", t(stop.desc))
       );
       if (stop.pills && stop.pills.length) {
         const meta = el("span", "stop-meta");
         stop.pills.forEach((p) => {
-          meta.appendChild(el("span", p.warn ? "pill pill--warn" : "pill", p.warn ? `⚠︎ ${p.text}` : p.text));
+          meta.appendChild(el("span", p.warn ? "pill pill--warn" : "pill", p.warn ? `⚠︎ ${t(p.text)}` : t(p.text)));
         });
         body.appendChild(meta);
       }
@@ -100,7 +167,7 @@
       }
       btn.addEventListener("click", () => selectStop(stop, btn));
       li.appendChild(btn);
-      if (stop.transit) li.appendChild(el("div", "transit", stop.transit));
+      if (stop.transit) li.appendChild(el("div", "transit", t(stop.transit)));
       stopsEl.appendChild(li);
     });
 
@@ -108,7 +175,7 @@
     warnEl.innerHTML = "";
     (day.warnings || []).forEach((w) => {
       const li = el("li");
-      li.innerHTML = w; // 行程檔是自己維護的，允許 <strong> 粗體
+      li.innerHTML = t(w); // 行程檔是自己維護的，允許 <strong> 粗體
       warnEl.appendChild(li);
     });
     $("warnings-box").hidden = !(day.warnings && day.warnings.length);
@@ -119,7 +186,7 @@
     renderDays();
     renderDay();
     const first = stopsEl.querySelector(".stop");
-    if (first) selectStop(TRIP.days[i].stops[0], first);
+    if (first) selectStop(DAYS[i].stops[0], first);
   }
 
   function selectStop(stop, btn) {
@@ -131,11 +198,11 @@
 
   // ---------- 右側地圖 ----------
   function searchTerm(stop) {
-    return stop.query || (stop.lat !== undefined ? `${stop.lat},${stop.lng}` : stop.name);
+    return stop.query || (stop.lat !== undefined ? `${stop.lat},${stop.lng}` : t(stop.name));
   }
 
   function embedUrl(q, zoom) {
-    return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=${zoom}&hl=zh-TW&output=embed`;
+    return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=${zoom}&hl=${ui("mapHl")}&output=embed`;
   }
 
   function setOpenLink(q) {
@@ -148,7 +215,7 @@
       if (!map) return;
       locate(stop).then((pos) => {
         if (!pos) {
-          setStatus(`找不到「${stop.name}」的位置，請在行程檔補上 lat / lng`);
+          setStatus(ui("notFound")(t(stop.name)));
           return;
         }
         map.panTo(pos);
@@ -183,11 +250,11 @@
     if (!marker) return;
     const box = el("div");
     box.style.color = "#111111";
-    const link = el("a", "", "在 Google 地圖導航");
+    const link = el("a", "", ui("navigate"));
     link.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(searchTerm(stop))}`;
     link.target = "_blank";
     link.rel = "noopener";
-    box.append(el("strong", "", stop.name), el("div", "", `${stop.time}　·　${stop.kind}`), link);
+    box.append(el("strong", "", t(stop.name)), el("div", "", `${t(stop.time)}　·　${t(stop.kind)}`), link);
     infoWindow.setContent(box);
     infoWindow.open({ map, anchor: marker });
   }
@@ -204,7 +271,7 @@
     infoWindow = new google.maps.InfoWindow();
     geocoder = new google.maps.Geocoder();
 
-    TRIP.days.forEach((day, d) => {
+    DAYS.forEach((day, d) => {
       day.stops.forEach((stop, i) => {
         locate(stop).then((pos) => {
           if (!pos) return;
@@ -213,7 +280,7 @@
           const marker = new google.maps.Marker({
             map,
             position: pos,
-            title: stop.name,
+            title: t(stop.name),
             label: { text: String(d + 1), color: "#080809", fontWeight: "700" }
           });
           marker.addListener("click", () => {
@@ -231,9 +298,9 @@
 
   function loadJsApi() {
     const s = document.createElement("script");
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&language=zh-TW&region=TW&callback=initMap`;
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&language=${ui("mapHl")}&region=TW&callback=initMap`;
     s.async = true;
-    s.onerror = () => setStatus("Google 地圖載入失敗，請檢查 API 金鑰");
+    s.onerror = () => setStatus(ui("mapLoadFail"));
     document.head.appendChild(s);
   }
 
@@ -256,7 +323,8 @@
     const here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     const accuracy = Math.round(pos.coords.accuracy);
     const isFirst = lastPos === null;
-    setStatus(`定位中・精確度約 ${accuracy} 公尺`);
+    lastAccuracy = accuracy;
+    setStatus(ui("tracking")(accuracy));
     setOpenLink(`${here.lat},${here.lng}`);
 
     if (useJsApi) {
@@ -264,7 +332,7 @@
         meMarker = new google.maps.Marker({
           map,
           position: here,
-          title: "我的位置",
+          title: ui("me"),
           zIndex: 999,
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
@@ -301,25 +369,20 @@
   }
 
   function onPositionError(err) {
-    const msgs = {
-      1: "未允許定位，請在瀏覽器設定開啟位置權限",
-      2: "目前無法取得位置",
-      3: "定位逾時，請再試一次"
-    };
     stopTracking();
-    setStatus(msgs[err.code] || "定位失敗");
+    setStatus(ui("geoErr")[err.code] || ui("geoFail"));
   }
 
   function startTracking() {
     if (!("geolocation" in navigator)) {
-      setStatus("此瀏覽器不支援定位");
+      setStatus(ui("noGeo"));
       return;
     }
     if (activeStopEl && !useJsApi) {
       activeStopEl.classList.remove("is-active");
       activeStopEl = null;
     }
-    setStatus("取得位置中…");
+    setStatus(ui("locating"));
     lastPos = null;
     watchId = navigator.geolocation.watchPosition(onPosition, onPositionError, {
       enableHighAccuracy: true,
@@ -327,14 +390,14 @@
       timeout: 20000
     });
     locateBtn.setAttribute("aria-pressed", "true");
-    locateBtn.textContent = "📍 停止即時位置";
+    locateBtn.textContent = ui("stopLocate");
   }
 
   function stopTracking() {
     if (watchId !== null) navigator.geolocation.clearWatch(watchId);
     watchId = null;
     locateBtn.setAttribute("aria-pressed", "false");
-    locateBtn.textContent = "📍 我的即時位置";
+    locateBtn.textContent = ui("locate");
     setStatus("");
     if (meMarker) {
       meMarker.setMap(null);
@@ -421,6 +484,7 @@
 
   // ---------- 啟動 ----------
   locateBtn.setAttribute("aria-pressed", "false");
+  applyStaticText();
   if (useJsApi) {
     loadJsApi();
     renderDays();

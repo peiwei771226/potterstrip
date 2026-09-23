@@ -52,6 +52,33 @@ body {
   scrollbar-color: var(--card-line) var(--paper);
 }
 
+/* 語言切換 */
+.masthead { position: relative; }
+.lang {
+  position: absolute;
+  top: -6px;
+  right: 0;
+  display: flex;
+  padding: 3px;
+  border: 2px solid var(--card-line);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 2px 0 var(--card-line);
+}
+.lang__btn {
+  padding: 3px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--round);
+  font-size: 14px;
+  cursor: pointer;
+}
+.lang__btn:hover { color: var(--green); }
+.lang__btn[aria-pressed="true"] { background: var(--green); color: #ffffff; }
+.lang__btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
 .eyebrow {
   font-size: 12px;
   letter-spacing: 4px;
